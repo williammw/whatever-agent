@@ -1,0 +1,113 @@
+body{margin:0}
+.app {
+  display: flex;
+  align-items: flex-start;
+  height: 100vh;
+  position: relative; /* Ensure proper stacking context */
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full height of the viewport */
+  width: 260px; /* Fixed width */
+  background-color: #333; /* Dark grey background */
+  color: #fff; /* Light text color for visibility */
+  position: fixed; /* Make sidebar fixed position */
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease-in-out; /* Smooth transition for toggling */
+}
+.sidebar-header, .sidebar-footer {
+  padding: 20px;
+  background-color: #444; /* Slightly lighter than the sidebar for contrast */
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto; /* Only this part is scrollable */
+  padding: 20px;
+  background-color: #333; /* Same as sidebar background */
+}
+
+
+.sidebar.closed {
+  transform: translateX(-100%); /* Move out of view */
+}
+
+.toggle-button {
+  position: fixed;
+  top: 50%;
+  transition: transform 0.3s ease; /* Animate transform */
+  cursor: pointer;
+  background: none;
+  border: none;
+  z-index: 1000;
+}
+
+/* Adjust the toggle button's position based on the sidebar state */
+.toggle-button.closed {
+  left: 0;
+}
+
+.toggle-button.open {
+  left: 260px; /* Adjust based on the sidebar's width */
+}
+
+/* Existing styles ... */
+.chat {
+  flex-grow: 1; /* Take available space */
+  transition: margin-left 0.3s ease-in-out;
+}
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  padding: 10px;
+  background-color: #666;
+  z-index: 2;
+  position: sticky;
+  top: 0;
+}
+
+.chat-footer, .chat-footer-2 {
+  padding: 10px;
+  background-color: #666;
+  z-index: 2;
+  position: sticky;
+  bottom: 0;
+}
+
+.chat-conversation {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically if needed */
+  overflow-y: auto; /* Allows scroll */
+  padding: 10px;
+  background-color: #eee;
+}
+
+.conversation-content {
+  width: 400px; /* Fixed width for the conversation content */
+  max-height: calc(100% - 60px); /* Adjust based on header/footer height */
+  overflow-y: auto; /* Allows internal scrolling */
+}
+/* Adjust based on sidebar state */
+.chat-content {
+  flex-grow: 1; /* Take available space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  overflow-y: auto; /* Enable scrolling */
+  /* padding: 10px; */
+  background-color: #fff; /* Just for visibility */
+  margin-left:260px;
+  height:100%;
+}
+.chat.closed {
+  margin-left: 0; /* No margin when the sidebar is closed */
+}

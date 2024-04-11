@@ -1,40 +1,29 @@
-import { useState } from "react";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import "./App.css"; // Ensure you've updated your CSS file accordingly
-import Chat from "./components/Chat";
-function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+import Content from "./components/Content";
+import PromptInput from "./components/PromptInput";
 
+const App = () => {
   return (
-    <div className="app">
-      <div className={`sidebar ${isSidebarOpen ? "" : "closed"}`}>
+    <Router>
+      <div className="flex h-screen bg-white">
         <Sidebar />
+        <div className="flex flex-col flex-grow">
+          <Navbar />
+          <Routes>
+            {/* Add your routes here */}
+            <Route path="/" element={<Content />} />
+            {/* Other routes can be added here */}
+          </Routes>
+          <div className="sticky bottom-0 w-full">
+            <PromptInput />
+          </div>
+        </div>
       </div>
-      <button
-        className="toggle-button"
-        style={{
-          transform: `translateY(-50%) translateX(${
-            isSidebarOpen ? "260px" : "0px"
-          })`,
-        }}
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        aria-label="Toggle Sidebar"
-      >
-        <span className="material-icons">
-          {isSidebarOpen ? "menu_open" : "menu"}
-        </span>
-      </button>
-
-      {/* the chat-content doesnt change the width if sidebar toggled */}
-      <div
-        className={`chat ${
-          isSidebarOpen ? "chat-content" : "chat-content closed"
-        }`}
-      >
-        <Chat />
-      </div>
-    </div>
+    </Router>
   );
-}
+};
 
 export default App;

@@ -1,0 +1,9 @@
+/* src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for sticky footer input */
+.sticky-footer-input {
+  margin-bottom: -1px; /* Fixes a 1px gap that can sometimes appear due to subpixel rendering */
+}

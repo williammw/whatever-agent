@@ -1,24 +1,19 @@
-export default function Sidebar() {
-  const sidebarContent = ["Item 1", "Item 2", "Item 3", "Item 4"];
+// src/components/Sidebar.js
+import { Link } from "react-router-dom";
 
+const Sidebar = () => {
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        {/* a search input for search sidebar-content */}
-        <input type="text" placeholder="Search..." />
-        <button className="search-button" aria-label="Search">
-          Search u
-        </button>
-        <button>create chat</button>
-      </div>
-      <div className="sidebar-content">
-        <ul>
-          {sidebarContent.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="sidebar-footer">sidebar footer</div>
+    <div className="h-full min-h-screen w-60 bg-gray-800 text-white flex flex-col">
+      {/* ... Your sidebar content, like logo, navigation items, etc. */}
+      <Link to="/" className="p-4 hover:bg-gray-700">
+        Home
+      </Link>
+      <Link to="/about" className="p-4 hover:bg-gray-700">
+        About
+      </Link>
+      {/* ... more navigation items */}
     </div>
   );
-}
+};
+
+export default Sidebar;

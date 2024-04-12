@@ -1,8 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { useSidebar } from "../context/SidebarContext";
 
 const SidebarToggleIcon = () => {
@@ -17,10 +14,7 @@ const SidebarToggleIcon = () => {
       }}
     >
       <button onClick={toggleSidebar}>
-        <FontAwesomeIcon
-          icon={isSidebarOpen ? faChevronLeft : faChevronRight}
-          className="cursor-pointer"
-        />
+        <FontAwesomeIcon icon={faChevronLeft} className="cursor-pointer" />
       </button>
     </div>
   );

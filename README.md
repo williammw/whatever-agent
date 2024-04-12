@@ -9,11 +9,3 @@ Currently, two official plugins are available:
 
 
 ### A agent connect OpenAI API and try to maximize it
-
-
-
-## pending item, auth, paymentgateway, userprofile
-
-
-
-# API project [API repo](https://github.com/williammw/agdoc)

@@ -1,5 +1,7 @@
 // src/components/Content.jsx
 import Message from "./Message";
+import Navbar from "./Navbar";
+import PromptInput from "./PromptInput";
 // Simulated message data
 const messages = [
   { id: 1, username:"iBuu",text: "Hello! How can I assist you today?", sender: "bot", avatar: "https://i.pravatar.cc/150?img=1"},
@@ -37,11 +39,17 @@ const messages = [
 
 const Content = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full flex-grow pt-[heightOfNavbar] px-4 pb-2 overflow-y-auto">
-      {messages.map((message) => (
-        <Message key={message.id} {...message} />
-      ))}
-    </div>
+    <>
+      <Navbar />
+      <div className="flex flex-col items-center justify-center w-full flex-grow pt-[heightOfNavbar] px-4 pb-2 overflow-y-auto">
+        {messages.map((message) => (
+          <Message key={message.id} {...message} />
+        ))}
+      </div>
+      <div className="sticky bottom-0 w-full">
+        <PromptInput />
+      </div>
+    </>
   );
 };
 

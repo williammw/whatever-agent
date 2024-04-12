@@ -1,33 +1,47 @@
 // src/components/PromptInput.js
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPaperclip,
+  faMicrophone,
+  faScroll,
+} from "@fortawesome/free-solid-svg-icons";
+
 import FileUpload from "./FileUpload";
 
 const PromptInput = () => {
-  const [prompt, setPrompt] = useState("");
+  const [input, setInput] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle the submission of the prompt
-    console.log(prompt);
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle the submission of the prompt input
+    console.log(input);
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-900 p-4 rounded-lg">
-      <FileUpload />
-      <div className="flex mt-2">
+      <div className="flex items-center text-white">
+        {/* Attach button */}
+        <FontAwesomeIcon icon={faPaperclip} className="mr-3" />
+
+        {/* Input field */}
         <input
           type="text"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
           placeholder="Enter a prompt here"
-          className="flex-grow p-2 bg-gray-800 text-white rounded-md mr-2"
+          className="flex-grow bg-gray-900 rounded-md p-2 text-white"
+          value={input}
+          onChange={handleInputChange}
         />
-        <button
-          type="submit"
-          className="bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-md"
-        >
-          Send
-        </button>
+
+        {/* Voice command button */}
+        <FontAwesomeIcon icon={faMicrophone} className="ml-3" />
+
+        {/* Templates button */}
+        <FontAwesomeIcon icon={faScroll} className="ml-3" />
       </div>
     </form>
   );

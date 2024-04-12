@@ -46,8 +46,10 @@ const Content = () => {
           <Message key={message.id} {...message} />
         ))}
       </div>
+      
       <div className="sticky bottom-0 w-[80%] mx-auto">
         <PromptInput />
+        <div className="relative px-2 py-2 text-center text-xs text-token-text-secondary md:px-[60px]" ></div>
       </div>
     </>
   );

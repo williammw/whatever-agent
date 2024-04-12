@@ -11,7 +11,11 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className={`h-full min-h-screen ${isSidebarOpen ? 'w-60' : 'w-0'} bg-gray-800 text-white flex flex-col`}>
+      <div
+        className={`h-full min-h-screen ${
+          isSidebarOpen ? "w-60" : "w-0"
+        } bg-gray-800 text-white flex flex-col`}
+      >
         {/* Your sidebar content */}
         <div className="flex justify-between items-center p-4 ">
           <span className="text-xl font-semibold">Whatever Agent</span>
@@ -25,7 +29,16 @@ const Sidebar = () => {
           Home
         </Link>
         <Link to="/about" className="p-4 hover:bg-gray-700">
-          About
+          News, $
+        </Link>
+        <Link to="/about" className="p-4 hover:bg-gray-700">
+          Umami
+        </Link>
+        <Link to="/about" className="p-4 hover:bg-gray-700">
+          Fortune Telling
+        </Link>
+        <Link to="/about" className="p-4 hover:bg-gray-700">
+          Buy and play
         </Link>
         {/* ... more navigation items */}
       </div>

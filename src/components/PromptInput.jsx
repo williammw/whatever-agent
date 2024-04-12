@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPaperclip,
   faMicrophone,
-  faScroll,
+  faTurnUp,
 } from "@fortawesome/free-solid-svg-icons";
+
 
 import FileUpload from "./FileUpload";
 
@@ -29,7 +30,8 @@ const PromptInput = () => {
         <FontAwesomeIcon icon={faPaperclip} className="mr-3" />
 
         {/* Input field */}
-        <input
+
+        <textarea
           type="text"
           placeholder="Enter a prompt here"
           className="flex-grow bg-gray-900 rounded-md p-2 text-white"
@@ -41,7 +43,7 @@ const PromptInput = () => {
         <FontAwesomeIcon icon={faMicrophone} className="ml-3" />
 
         {/* Templates button */}
-        <FontAwesomeIcon icon={faScroll} className="ml-3" />
+        <FontAwesomeIcon icon={faTurnUp} className="ml-3" />
       </div>
     </form>
   );

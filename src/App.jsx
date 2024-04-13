@@ -22,7 +22,7 @@ const App = () => {
             <Sidebar />
 
             <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
-              <div className="relative h-full w-full flex-1 overflow-auto">
+              
                 <SidebarToggleIcon />
                 <Routes>
                   {/* Define your routes within this Routes component */}
@@ -31,7 +31,7 @@ const App = () => {
                   {/* Example: */}
                   {/* <Route path="/about" element={<About />} /> */}
                 </Routes>
-              </div>
+              
             </div>
           </div>
         </Router>

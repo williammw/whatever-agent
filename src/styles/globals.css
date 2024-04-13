@@ -7,3 +7,25 @@
 .sticky-footer-input {
   margin-bottom: -1px; /* Fixes a 1px gap that can sometimes appear due to subpixel rendering */
 }
+
+
+/* For Webkit browsers like Chrome/Safari */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 12px; /* width of the entire scrollbar */
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* color of the tracking area */
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #a0aec0; /* color of the scroll thumb */
+  border-radius: 6px; /* roundness of the scroll thumb */
+  border: 3px solid transparent; /* creates padding around scroll thumb */
+}
+
+/* For Firefox */
+.hide-scrollbar {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: #a0aec0 transparent; /* thumb and track color */
+}

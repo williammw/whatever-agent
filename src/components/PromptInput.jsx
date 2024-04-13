@@ -40,6 +40,12 @@ const PromptInput = () => {
   const handleSubmit = async (e) => {
     console.log('submit')
     e.preventDefault();
+    addMessage({
+      username: "User",
+      text: input,
+      sender: "user",
+      avatar: "https://i.pravatar.cc/300",
+    });
     setLoading(true);
     try {
       const response = await axios.post(
@@ -48,12 +54,7 @@ const PromptInput = () => {
           text: input,
         }
       );
-      addMessage({
-        username: "User",
-        text: input,
-        sender: "user",
-        avatar: "https://i.pravatar.cc/300",
-      });
+      
       addMessage({
         username: "iBuu",
         text: response.data.text,

@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShareNodes } from "@fortawesome/free-solid-svg-icons";
 const Navbar = () => {
   return (
-    <div className="sticky top-0 z-50 text-white p-4 flex justify-between items-center">
+    <div className="sticky top-0 z-50 text-white pr-4  flex justify-between items-center">
       
         {/* Left side - Dropdown menu */}
         <Dropdown>
@@ -39,7 +39,7 @@ const Navbar = () => {
         </Dropdown>
 
         {/* Right side - Share button */}
-      
+      <div className='bg-white w-[80%] h-[100%]'>sss</div>
       <Button auto flat bordered color="light" variant="faded">
         <FontAwesomeIcon icon={faShareNodes} className="text-gray-800" />
       </Button>

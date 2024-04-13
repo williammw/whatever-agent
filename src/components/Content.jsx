@@ -28,8 +28,13 @@ const Content = () => {
             }}
             className="overflow-y-auto hide-scrollbar"
           >
-            {Tmessages.map((message) => (
-              <Message key={message.id} {...message} />
+            {messages.map((message, index) => (
+              <div
+                key={message.id}
+                style={{ paddingTop: index === 0 ? "44px" : "0" }}
+              >
+                <Message {...message} />
+              </div>
             ))}
             {/* Invisible div to auto-scroll to */}
             <div ref={messagesEndRef} />

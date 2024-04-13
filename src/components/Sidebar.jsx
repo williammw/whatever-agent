@@ -28,18 +28,16 @@ const Sidebar = () => {
         <Link to="/" className="p-4 hover:bg-gray-700">
           Home
         </Link>
-        <Link to="/about" className="p-4 hover:bg-gray-700">
-          News, $
+        <Link to="/news" className="p-4 hover:bg-gray-700">
+          consolidate news
         </Link>
-        <Link to="/about" className="p-4 hover:bg-gray-700">
+        <Link to="/umami" className="p-4 hover:bg-gray-700">
           Umami
         </Link>
-        <Link to="/about" className="p-4 hover:bg-gray-700">
+        <Link to="/fortune" className="p-4 hover:bg-gray-700">
           Fortune Telling
         </Link>
-        <Link to="/about" className="p-4 hover:bg-gray-700">
-          Buy and play
-        </Link>
+        
         {/* ... more navigation items */}
       </div>
     </>

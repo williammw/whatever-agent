@@ -11,6 +11,7 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
         .catch((error) => console.error("Error playing the audio:", error));
     }
   };
+  console.log()
 
    
   return (
@@ -25,7 +26,7 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
           className="w-8 h-8 rounded-full"
         />
         {/* Second row for message text */}
-        <div className="bg-gray-100 text-sm p-3 rounded-lg break-words w-full mt-2 mb-2 ">
+        <div className="bg-gray-100 text-sm p-3 rounded-lg break-words w-full mt-2 ">
           {text}
           {audioUrl && (
             <button onClick={() => handleAudioPlay(audioUrl)} className="ml-2">

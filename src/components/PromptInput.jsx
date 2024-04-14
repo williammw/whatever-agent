@@ -54,7 +54,7 @@ const PromptInput = () => {
           text: input,
         }
       );
-      
+      console.log(response.data)
       addMessage({
         username: "iBuu",
         text: response.data.text,

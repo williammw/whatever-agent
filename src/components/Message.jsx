@@ -1,7 +1,8 @@
 // src/components/Message.jsx
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
-
+import PropTypes from "prop-types";
 const Message = ({ text, sender, username, avatar, audioUrl }) => {
   const handleAudioPlay = () => {
     if (audioUrl) {
@@ -11,7 +12,16 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
         .catch((error) => console.error("Error playing the audio:", error));
     }
   };
-  console.log()
+  
+
+  
+
+  const formattedText = text.split("\n").map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ));
 
    
   return (
@@ -26,8 +36,8 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
           className="w-8 h-8 rounded-full"
         />
         {/* Second row for message text */}
-        <div className="bg-gray-100 text-sm p-3 rounded-lg break-words w-full mt-2 ">
-          {text}
+        <div className="bg-gray-100 text-sm p-3 rounded-lg break-words w-full mt-2 message-text">
+          {formattedText}
           {audioUrl && (
             <button onClick={() => handleAudioPlay(audioUrl)} className="ml-2">
               <FontAwesomeIcon
@@ -41,5 +51,16 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
     </div>
   );
 };
+// ...
+
+  Message.propTypes = {
+    text: PropTypes.string.isRequired,
+    sender: PropTypes.string,
+    username: PropTypes.string,
+    avatar: PropTypes.string,
+    audioUrl: PropTypes.string,
+    
+    // ... other props
+  };
 
 export default Message;

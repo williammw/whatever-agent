@@ -30,12 +30,7 @@ const PromptInput = () => {
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
-  const handleAudioPlay = (audioUrl) => {
-    const audio = new Audio(audioUrl);
-    audio
-      .play()
-      .catch((error) => console.error("Error playing the audio:", error));
-  };
+  
 
   const handleSubmit = async (e) => {
     console.log('submit')
@@ -46,6 +41,7 @@ const PromptInput = () => {
       sender: "user",
       avatar: "https://i.pravatar.cc/300",
     });
+    setInput("");
     setLoading(true);
     try {
       const response = await axios.post(
@@ -67,6 +63,7 @@ const PromptInput = () => {
       setResponseText(response.data.text);
       setAudioUrl(response.data.audio);
       setLoading(false);
+      
     } catch (error) {
       console.error("There was an error!", error);
       setLoading(false);

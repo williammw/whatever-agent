@@ -33,7 +33,9 @@ const Content = () => {
                 key={message.id}
                 style={{ paddingTop: index === 0 ? "44px" : "0" }}
               >
-                <Message {...message} />
+                <div className="text-left text-xs text-token-text-secondary pt-4">
+                  <Message {...message} />
+                </div>
               </div>
             ))}
             {/* Invisible div to auto-scroll to */}

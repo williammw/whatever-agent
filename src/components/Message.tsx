@@ -1,13 +1,18 @@
-// src/components/Message.jsx
 import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
-import PropTypes from "prop-types";
-const Message = ({ text, sender, username, avatar, audioUrl }) => {
 
+interface MessageProps {
+  text: string;
+  role?: string;
+  username: string;
+  avatar: string;
+  audioUrl?: string;
+}
+
+const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUrl }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(new Audio(audioUrl));
-
 
   const toggleAudioPlay = () => {
     if (audioUrl) {
@@ -23,9 +28,6 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
       }
     }
   };
-  
-
-  
 
   const formattedText = text.split("\n").map((line, index) => (
     <React.Fragment key={index}>
@@ -34,7 +36,6 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
     </React.Fragment>
   ));
 
-   
   return (
     <div className="w-full text-token-text-primary">
       <div className="flex flex-col mx-auto gap-3 md:gap-4 md:px-5 lg:px-1 xl:px-5 md:max-w-3xl lg:max-w-[40rem] xl:max-w-[48rem] pb-0">
@@ -58,16 +59,5 @@ const Message = ({ text, sender, username, avatar, audioUrl }) => {
     </div>
   );
 };
-// ...
-
-  Message.propTypes = {
-    text: PropTypes.string.isRequired,
-    sender: PropTypes.string,
-    username: PropTypes.string,
-    avatar: PropTypes.string,
-    audioUrl: PropTypes.string,
-    
-    // ... other props
-  };
 
 export default Message;

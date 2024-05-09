@@ -8,12 +8,13 @@ export const useMessages = () => useContext(MessagesContext);
 
 // Provider component
 export const MessagesProvider = ({ children }) => {
+  // TODO require redesign the message object
   const [messages, setMessages] = useState([
     {
       id: 1,
       username: "iBuu",
       text: "Hello! How can I assist you today?",
-      sender: "bot",
+      role: "bot",
       avatar: "https://i.pravatar.cc/150?img=1",
     },
     // ...any other initial messages

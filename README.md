@@ -9,3 +9,8 @@ Currently, two official plugins are available:
 
 
 ### A agent connect OpenAI API and try to maximize it
+
+
+
+## pending item, auth, paymentgateway, userprofile
+`

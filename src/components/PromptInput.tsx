@@ -6,8 +6,7 @@ import { useMessages } from "../context/MessagesContext";
 
 const PromptInput: React.FC = () => {
   const [input, setInput] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const { addMessage } = useMessages();
+  const { addMessage, updateMessage } = useMessages();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -15,27 +14,40 @@ const PromptInput: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const userMessageId = new Date().getTime(); // Unique temporary ID for the user message
+    const botMessageId = userMessageId + 1; // Ensure a unique ID for the bot's message
+
     addMessage({
+      id: userMessageId,
       username: "User",
       text: input,
       role: "user",
       avatar: "https://i.pravatar.cc/300",
     });
+
     setInput("");
-    setLoading(true);
+
+    addMessage({
+      id: botMessageId,
+      username: "iBuu",
+      text: "",
+      role: "bot",
+      avatar: "https://i.pravatar.cc/300",
+      loading: true,
+    });
+
     try {
       const response = await axios.post("http://localhost:8000/api/v1/agents/text_to_speech_pipeline/", { text: input });
-      addMessage({
-        username: "iBuu",
+
+      updateMessage(botMessageId, {
         text: response.data.text,
-        role: "bot",
-        avatar: "https://i.pravatar.cc/300",
         audioUrl: response.data.audio,
+        loading: false,
       });
-      setLoading(false);
     } catch (error) {
       console.error("There was an error!", error);
-      setLoading(false);
+      updateMessage(botMessageId, { text: "Error occurred", loading: false });
     }
   };
 

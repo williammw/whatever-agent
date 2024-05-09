@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlayCircle, faPauseCircle, faThumbsDown, faCopy } from "@fortawesome/free-regular-svg-icons";
+import { Skeleton } from "@nextui-org/react";
 
 interface MessageProps {
   text: string;
@@ -8,9 +9,10 @@ interface MessageProps {
   username: string;
   avatar: string;
   audioUrl?: string;
+  loading?: boolean;
 }
 
-const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUrl }) => {
+const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUrl, loading }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(new Audio(audioUrl));
 
@@ -29,6 +31,13 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
     }
   };
 
+  useEffect(() => {
+    // Ensure audio is re-initialized on URL change
+    if (audioUrl) {
+      audioRef.current = new Audio(audioUrl);
+    }
+  }, [audioUrl]);
+
   const formattedText = text.split("\n").map((line, index) => (
     <React.Fragment key={index}>
       {line}
@@ -39,22 +48,45 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
   return (
     <div className="w-full text-token-text-primary">
       <div className="flex flex-col mx-auto gap-3 md:gap-4 md:px-5 lg:px-1 xl:px-5 md:max-w-3xl lg:max-w-[40rem] xl:max-w-[48rem] pb-0">
-        <img
-          src={avatar}
-          alt={`${username}'s avatar`}
-          className="w-8 h-8 rounded-full"
-        />
-        <div className="bg-gray-100 text-sm p-3 rounded-lg break-words w-full mt-2 message-text">
-          {formattedText}
-          {audioUrl && (
-            <button onClick={toggleAudioPlay} className="ml-2">
-              <FontAwesomeIcon
-                icon={isPlaying ? faPauseCircle : faPlayCircle}
-                className="text-blue-500 cursor-pointer"
-              />
-            </button>
-          )}
+        <div className="flex items-center">
+          <img
+            src={avatar}
+            alt={`${username}'s avatar`}
+            className="w-8 h-8 rounded-full"
+          />
+          <span className="ml-2 text-sm font-semibold">{role}</span>
         </div>
+        <div className="bg-gray-100 text-sm p-3 rounded-lg break-words w-full mt-2 message-text">
+          {loading ? (
+            <Skeleton className='w-full h-24' />
+          ) : (
+            formattedText
+          )}
+          
+        </div>
+        {audioUrl && !loading && (
+        <div className='icon set'>
+          <div className="flex items-center gap-2"></div>
+          <button onClick={toggleAudioPlay} className="ml-2">
+            <FontAwesomeIcon
+              icon={faPlayCircle}
+              className="cursor-pointer w-4 h-4 fa-fw" // Add fa-fw class
+            />
+          </button>
+          <button className="ml-2">
+            <FontAwesomeIcon
+              icon={faThumbsDown}
+              className="cursor-pointer w-4 h-4 fa-fw" // Add fa-fw class
+            />
+          </button>
+          <button className="ml-2">
+            <FontAwesomeIcon
+              icon={faCopy}
+              className="cursor-pointer w-4 h-4 fa-fw" // Add fa-fw class
+            />
+          </button>
+          </div>
+          )}
       </div>
     </div>
   );

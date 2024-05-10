@@ -7,6 +7,7 @@ import { Image } from "@nextui-org/react";
 import { useMessages } from "../context/MessagesContext";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import logo from "../assets/logo.png";
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 
 const Sidebar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -14,13 +15,14 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCreateChat = () => {
+    const newChatId = uuidv4(); // Generate a new UUID for the chat
     const newChat = {
-      id: new Date().getTime(),
+      id: newChatId,
       name: `Chat ${new Date().toLocaleString()}`,
       messages: [],
     };
     addChat(newChat);
-    navigate(`/chat/${newChat.id}`);
+    navigate(`/u/${newChat.id}`);
   };
 
   return (
@@ -66,7 +68,7 @@ const Sidebar: React.FC = () => {
           {chats.map((chat) => (
             <Link
               key={chat.id}
-              to={`/chat/${chat.id}`}
+              to={`/u/${chat.id}`}
               className="block p-2 hover:bg-gray-700 rounded-md"
             >
               {chat.name}

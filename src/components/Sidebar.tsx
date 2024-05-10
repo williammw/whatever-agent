@@ -13,7 +13,7 @@ const Sidebar: React.FC = () => {
   return (
     <div
       className={`h-full min-h-screen transition-all duration-300 ${
-        isSidebarOpen ? "w-60" : "w-0"
+        isSidebarOpen ? "w-80" : "w-0"
       } bg-gray-800 text-white flex flex-col`}
     >
       {/* First Row: Logo, App Name, Create Icon */}
@@ -45,7 +45,7 @@ const Sidebar: React.FC = () => {
       <div className="">
         <DateRangePicker 
           label="Stay duration" 
-          className="max-w-xs" 
+          className="max-w-xs pl-4 pr-4" 
         />
       </div>
 

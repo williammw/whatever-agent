@@ -12,7 +12,7 @@ const SidebarToggleIcon = () => {
       className="fixed left-0 top-1/2 z-40"
       style={{
         transform: isSidebarOpen
-          ? "translateX(260px) translateY(-50%) rotate(0deg) translateZ(0px)"
+          ? "translateX(330px) translateY(-50%) rotate(0deg) translateZ(0px)"
           : "translateX(10px) translateY(-50%) rotate(0deg) translateZ(0px)",
       }}
     >

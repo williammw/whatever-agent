@@ -1,12 +1,14 @@
-// src/components/Content.tsx
 import React, { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import Message from "./Message";
 import Navbar from "./Navbar";
 import PromptInput from "./PromptInput";
 import { useMessages } from "../context/MessagesContext";
 
 const Content: React.FC = () => {
-  const { messages } = useMessages();
+  const { chatId } = useParams<{ chatId: string }>();
+  const { chats } = useMessages();
+  const chat = chats.find((chat) => chat.id === Number(chatId));
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const navbarHeight = "50px"; // Replace with your actual navbar height
@@ -14,7 +16,7 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [chat?.messages]);
 
   return (
     <>
@@ -27,11 +29,8 @@ const Content: React.FC = () => {
             }}
             className="overflow-y-auto hide-scrollbar"
           >
-            {messages.map((message, index) => (
-              <div
-                key={message.id}
-                style={{ paddingTop: index === 0 ? "44px" : "0" }}
-              >
+            {chat?.messages.map((message, index) => (
+              <div key={message.id} style={{ paddingTop: index === 0 ? "44px" : "0" }}>
                 <div className="text-left text-xs text-token-text-secondary pt-4">
                   <Message {...message} />
                 </div>
@@ -42,7 +41,7 @@ const Content: React.FC = () => {
         </div>
       </div>
       <div className="sticky bottom-0 w-[80%] mx-auto pb-4 z-10">
-        <PromptInput />
+        <PromptInput chatId={Number(chatId)} />
         <div className="relative px-2 py-2 text-center text-xs text-token-text-secondary md:px-[60px] bg-white"></div>
       </div>
     </>

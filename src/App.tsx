@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar";
 import Content from "./components/Content";
 import SidebarToggleIcon from "./components/SidebarToggleIcon";
 import { SidebarProvider } from './context/SidebarContext';
-import { MessagesProvider, useMessages } from "./context/MessagesContext";
+import { MessagesProvider } from "./context/MessagesContext";
 
 const App = () => {
   useEffect(() => {
@@ -20,10 +20,8 @@ const App = () => {
             <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
               <SidebarToggleIcon />
               <Routes>
-                {/* <Route path="/" element={<Navigate to="/chat/1" />} />
+                <Route path="/" element={<Navigate to="/chat/1" />} />
                 <Route path="/chat/:chatId" element={<Content />} />
-                 */}
-                <Route path="/" element={<Content />} />
               </Routes>
             </div>
           </div>

@@ -1,4 +1,3 @@
-// src/context/MessagesContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface Message {
@@ -9,44 +8,58 @@ interface Message {
   avatar: string;
   audioUrl?: string;
   loading?: boolean;
+  userId?: number; // Add userId for member login
+  imageUrl?: string; // Add imageUrl for image uploads
+  downloadUrl?: string; // Add downloadUrl for downloadable content
+}
+
+interface Chat {
+  id: number;
+  name: string;
+  messages: Message[];
 }
 
 interface MessagesContextType {
-  messages: Message[];
-  addMessage: (message: Message) => void;
-  updateMessage: (id: number, updatedMessage: Partial<Message>) => void;
+  chats: Chat[];
+  addChat: (chat: Chat) => void;
+  addMessageToChat: (chatId: number, message: Message) => void;
+  updateMessage: (chatId: number, messageId: number, updatedMessage: Partial<Message>) => void;
 }
 
 const MessagesContext = createContext<MessagesContextType | undefined>(undefined);
 
 export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      username: "iBuu",
-      text: "Hello! How can I assist you today?",
-      role: "bot",
-      avatar: "https://i.pravatar.cc/150?img=1",
-    },
-  ]);
+  const [chats, setChats] = useState<Chat[]>([]);
 
-  const addMessage = (message: Message) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      message,
-    ]);
+  const addChat = (chat: Chat) => {
+    setChats((prevChats) => [...prevChats, chat]);
   };
 
-  const updateMessage = (id: number, updatedMessage: Partial<Message>) => {
-    setMessages((prevMessages) =>
-      prevMessages.map((message) =>
-        message.id === id ? { ...message, ...updatedMessage } : message
+  const addMessageToChat = (chatId: number, message: Message) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId ? { ...chat, messages: [...chat.messages, message] } : chat
+      )
+    );
+  };
+
+  const updateMessage = (chatId: number, messageId: number, updatedMessage: Partial<Message>) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId
+          ? {
+              ...chat,
+              messages: chat.messages.map((message) =>
+                message.id === messageId ? { ...message, ...updatedMessage } : message
+              ),
+            }
+          : chat
       )
     );
   };
 
   return (
-    <MessagesContext.Provider value={{ messages, addMessage, updateMessage }}>
+    <MessagesContext.Provider value={{ chats, addChat, addMessageToChat, updateMessage }}>
       {children}
     </MessagesContext.Provider>
   );

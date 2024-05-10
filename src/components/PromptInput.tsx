@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip, faMicrophone, faTurnUp } from "@fortawesome/free-solid-svg-icons";
 import { useMessages } from "../context/MessagesContext";
+import { fetchResponse } from "../services/apiService";
 
-const PromptInput: React.FC = () => {
+interface PromptInputProps {
+  chatId: number;
+}
+
+const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
   const [input, setInput] = useState<string>("");
-  const { addMessage, updateMessage } = useMessages();
+  const { addMessageToChat, updateMessage } = useMessages();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -18,7 +22,7 @@ const PromptInput: React.FC = () => {
     const userMessageId = new Date().getTime(); // Unique temporary ID for the user message
     const botMessageId = userMessageId + 1; // Ensure a unique ID for the bot's message
 
-    addMessage({
+    addMessageToChat(chatId, {
       id: userMessageId,
       username: "User",
       text: input,
@@ -28,7 +32,7 @@ const PromptInput: React.FC = () => {
 
     setInput("");
 
-    addMessage({
+    addMessageToChat(chatId, {
       id: botMessageId,
       username: "iBuu",
       text: "",
@@ -38,16 +42,15 @@ const PromptInput: React.FC = () => {
     });
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/agents/text_to_speech_pipeline/", { text: input });
+      const data = await fetchResponse(input);
 
-      updateMessage(botMessageId, {
-        text: response.data.text,
-        audioUrl: response.data.audio,
+      updateMessage(chatId, botMessageId, {
+        text: data.text,
+        audioUrl: data.audio,
         loading: false,
       });
     } catch (error) {
-      console.error("There was an error!", error);
-      updateMessage(botMessageId, { text: "Error occurred", loading: false });
+      updateMessage(chatId, botMessageId, { text: "Error occurred", loading: false });
     }
   };
 

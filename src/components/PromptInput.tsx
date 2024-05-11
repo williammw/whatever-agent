@@ -48,7 +48,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       navigate(`/u/${newChatId}`); // Navigate to the new chat
     }
 
-    addMessageToChat(targetChatId, {
+    addMessageToChat(targetChatId ?? "", {
       id: userMessageId,
       username: "User",
       text: input,
@@ -58,7 +58,19 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
     setInput("");
 
-    addMessageToChat(targetChatId, {
+    if (!targetChatId) {
+      const newChatId = uuidv4(); // Generate a new UUID for the chat
+      const newChat = {
+        id: newChatId,
+        name: `Chat ${new Date().toLocaleString()}`,
+        messages: [],
+      };
+      addChat(newChat);
+      targetChatId = newChatId;
+      navigate(`/u/${newChatId}`); // Navigate to the new chat
+    }
+
+    addMessageToChat(targetChatId ?? "", {
       id: botMessageId,
       username: "iBuu",
       text: "",
@@ -70,13 +82,13 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
     try {
       const data = await fetchResponse(input);
 
-      updateMessage(targetChatId, botMessageId, {
+      updateMessage(targetChatId ?? "", botMessageId, {
         text: data.text,
         audioUrl: data.audio,
         loading: false,
       });
     } catch (error) {
-      updateMessage(targetChatId, botMessageId, { text: "Error occurred", loading: false });
+      updateMessage(targetChatId ?? "", botMessageId, { text: "Error occurred", loading: false });
     }
   };
 

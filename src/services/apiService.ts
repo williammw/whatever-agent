@@ -1,15 +1,15 @@
-// src/services/apiService.ts
-
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api/v1/agents/text_to_speech_pipeline/';
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const fetchResponse = async (text: string) => {
-  try {
-    const response = await axios.post(API_URL, { text });
-    return response.data;
-  } catch (error) {
-    console.error("There was an error!", error);
-    throw error;
-  }
+export const fetchResponse = async (input: string) => {
+  const response = await apiClient.post('/api/v1/agents/text_to_speech_pipeline/', { text: input });
+  return response.data;
 };
+
+export default apiClient;

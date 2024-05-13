@@ -104,7 +104,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
           <textarea
             ref={textareaRef}
             placeholder="Enter a prompt here"
-            className="flex-grow bg-transparent p-2 text-gray-900 placeholder-gray-400 resize-none h-12 text-base focus:outline-none"
+            className="flex-grow bg-transparent p-2 text-gray-900 placeholder-gray-400 resize-none h-12 text-base focus:outline-none w-full"
             value={input}
             onChange={handleInputChange}
             style={{

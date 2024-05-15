@@ -22,3 +22,6 @@ Umami includes an agent that connects to the OpenAI API and utilizes its capabil
 ## API Project
 
 For more details about the API project, please refer to the [API repository](https://github.com/williammw/agdoc).
+![Image 1](images/1.png)
+
+![Image 2](images/2.png)

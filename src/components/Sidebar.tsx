@@ -1,3 +1,4 @@
+// src/components/Sidebar.tsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,16 +9,16 @@ import { useMessages } from "../context/MessagesContext";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import logo from "../assets/logo.png";
 import { useAuth } from '../context/AuthContext';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+import { v4 as uuidv4 } from 'uuid';
 
 const Sidebar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { chats, addChat } = useMessages();
-   const { user } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  console.log('user', user)
+
   const handleCreateChat = () => {
-    const newChatId = uuidv4(); // Generate a new UUID for the chat
+    const newChatId = uuidv4();
     const newChat = {
       id: newChatId,
       name: `Chat ${new Date().toLocaleString()}`,
@@ -63,10 +64,10 @@ const Sidebar: React.FC = () => {
       <div className="p-4">
         <DateRangePicker label="Stay duration" className="max-w-xs w-full" />
       </div>
-        {user && (
+      {user && (
         <div className="user-info mt-4 p-4 bg-gray-200 rounded-lg">
-          <img src={user.picture} alt={`${user.name}'s avatar`} className="w-10 h-10 rounded-full mb-2" />
-          <h4 className="text-lg font-semibold">{user.name}</h4>
+          <img src={user.photoURL} alt={`${user.displayName}'s avatar`} className="w-10 h-10 rounded-full mb-2" />
+          <h4 className="text-lg font-semibold">{user.displayName}</h4>
           <p className="text-sm">{user.email}</p>
         </div>
       )}

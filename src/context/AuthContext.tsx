@@ -1,51 +1,52 @@
+// src/context/AuthContext.tsx
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import {jwtDecode} from "jwt-decode";
-import apiClient from "../services/apiService";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: any;
-  login: (username: string, password: string) => Promise<void>;
+  user: User | null;
+  loginWithGoogle: () => void;
   logout: () => void;
-  register: (username: string, email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedUser = jwtDecode<any>(token);
-      setUser(decodedUser);
-      setIsAuthenticated(true);
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const response = await apiClient.post("/api/v1/auth/login", { username, password });
-    const { access_token } = response.data;
-    localStorage.setItem("token", access_token);
-    const decodedUser = jwtDecode<any>(access_token);
-    setUser(decodedUser);
-    setIsAuthenticated(true);
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Google login failed", error);
+    }
   };
 
-  const register = async (username: string, email: string, password: string) => {
-    await apiClient.post("/api/v1/auth/register", { username, email, password });
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
+  const logout = async () => {
+    await auth.signOut();
     setUser(null);
     setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );

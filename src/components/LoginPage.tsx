@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,6 +41,7 @@ const LoginPage: React.FC = () => {
           />
         </div>
         <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">Login</button>
+        <button type="button" onClick={googleLogin} className="w-full p-2 bg-red-500 text-white rounded mt-4">Login with Google</button>
       </form>
     </div>
   );

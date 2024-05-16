@@ -73,7 +73,7 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
             />
             {/* <span className="mr-2 text-sm font-semibold">{role}</span> */}
             <div className="bg-gray-100 text-sm p-3 rounded-lg break-words max-w-[80%] mt-2 message-text">
-              {loading ? (
+              {false ? (
                 <Skeleton className='w-full h-24' />
               ) : (
                 formattedText

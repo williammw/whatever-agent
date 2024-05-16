@@ -64,7 +64,7 @@ const Sidebar: React.FC = () => {
         <DateRangePicker label="Stay duration" className="max-w-xs w-full" />
       </div>
       {user && (
-        <div className="user-info mt-4 p-4 bg-gray-200 rounded-lg">
+        <div className="user-info mt-4 p-4 rounded-lg">
           <img src={user.photoURL ?? ''} alt={`${user.displayName}'s avatar`} className="w-10 h-10 rounded-full mb-2" />
           <h4 className="text-lg font-semibold">{user.displayName}</h4>
           <p className="text-sm">{user.email}</p>

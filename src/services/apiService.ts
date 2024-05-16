@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8000',
@@ -7,17 +8,10 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchResponse = async (input: string) => {
-  try {
-    if (!input) {
-      throw new Error("Input text is empty");
-    }
-    const response = await apiClient.post('/api/v1/agents/text_to_speech_pipeline/', { text: input });
-    console.log("API response:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("API request error:", error.response ? error.response.data : error.message);
-    throw error;
-  }
+export const fetchResponseStream = (input: string) => {
+  return new EventSourcePolyfill(`http://localhost:8000/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
 };
+
 export default apiClient;
+
+

@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperclip, faMicrophone, faTurnUp } from "@fortawesome/free-solid-svg-icons";
+import { faPaperclip, faMicrophone, faTurnUp, faStop } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useMessages } from "../context/MessagesContext";
-import { fetchResponse } from "../services/apiService";
 import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from "@nextui-org/react";
 
@@ -14,6 +13,9 @@ interface PromptInputProps {
 const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
   const [input, setInput] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isStopped, setIsStopped] = useState<boolean>(false);
+  const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { chats, addChat, addMessageToChat, updateMessage } = useMessages();
   const navigate = useNavigate();
@@ -31,6 +33,8 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    setIsStopped(false);
 
     const userMessageId = new Date().getTime();
     const botMessageId = userMessageId + 1;
@@ -57,7 +61,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       avatar: "https://i.pravatar.cc/300",
     });
 
-    setInput(""); // Clear input after submitting
+    setInput("");
 
     addMessageToChat(targetChatId, {
       id: botMessageId,
@@ -68,16 +72,38 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       loading: true,
     });
 
-    try {
-      const data = await fetchResponse(input);
+    const es = new EventSource(`http://localhost:8000/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
+    setEventSource(es);
 
-      updateMessage(targetChatId, botMessageId, {
-        text: data.text,
-        audioUrl: data.audio,
-        loading: false,
-      });
-    } catch (error) {
+    es.onmessage = (event) => {
+      if (isStopped) {
+        es.close();
+        return;
+      }
+
+      const { data } = event;
+      if (data.startsWith("[AUDIO]")) {
+        const audioBase64 = data.replace("[AUDIO]", "");
+        updateMessage(targetChatId, botMessageId, { audioUrl: `data:audio/mp3;base64,${audioBase64}`, loading: false });
+        es.close();
+        setLoading(false);
+      } else {
+        updateMessage(targetChatId, botMessageId, { text: data, loading: true });
+      }
+    };
+
+    es.onerror = () => {
       updateMessage(targetChatId, botMessageId, { text: "Error occurred", loading: false });
+      es.close();
+      setLoading(false);
+    };
+  };
+
+  const handleStop = () => {
+    if (eventSource) {
+      eventSource.close();
+      setIsStopped(true);
+      setLoading(false);
     }
   };
 
@@ -100,9 +126,14 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
           />
         </div>
         <FontAwesomeIcon icon={faMicrophone} className="ml-3 text-2xl" />
-        <button type="submit">
+        <button type="submit" disabled={loading}>
           <FontAwesomeIcon icon={faTurnUp} className="ml-3 text-2xl" />
         </button>
+        {loading && (
+          <button type="button" onClick={handleStop} className="ml-2">
+            <FontAwesomeIcon icon={faStop} className="text-2xl" />
+          </button>
+        )}
       </div>
     </form>
   );

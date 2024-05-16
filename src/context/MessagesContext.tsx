@@ -51,7 +51,13 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
           ? {
               ...chat,
               messages: chat.messages.map((message) =>
-                message.id === messageId ? { ...message, ...updatedMessage } : message
+                message.id === messageId
+                  ? {
+                      ...message,
+                      ...updatedMessage,
+                      text: (message.text || '') + (updatedMessage.text || '')
+                    }
+                  : message
               ),
             }
           : chat

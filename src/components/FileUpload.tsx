@@ -1,12 +1,15 @@
 // src/components/FileUpload.js
-import { useState } from "react";
+import React, { useState } from "react";
 
 const FileUpload = () => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
 
-  const handleFileChange = (event) => {
-    setFiles([...event.target.files]);
-    // Perform further actions like uploading to a server if needed
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const selectedFiles = Array.from(event.target.files);
+      setFiles(selectedFiles);
+      // Perform further actions like uploading to a server if needed
+    }
   };
 
   return (

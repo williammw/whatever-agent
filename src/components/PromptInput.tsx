@@ -4,10 +4,11 @@ import { faPaperclip, faMicrophone, faTurnUp } from "@fortawesome/free-solid-svg
 import { useNavigate } from "react-router-dom";
 import { useMessages } from "../context/MessagesContext";
 import { fetchResponse } from "../services/apiService";
-import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+import { v4 as uuidv4 } from 'uuid';
+import { Textarea } from "@nextui-org/react";
 
 interface PromptInputProps {
-  chatId?: string; // Change chatId type to string
+  chatId?: string;
 }
 
 const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
@@ -19,8 +20,8 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto"; // Reset height to auto to calculate scroll height correctly
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set height to scrollHeight
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [input]);
 
@@ -31,13 +32,13 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const userMessageId = new Date().getTime(); // Unique temporary ID for the user message
-    const botMessageId = userMessageId + 1; // Ensure a unique ID for the bot's message
+    const userMessageId = new Date().getTime();
+    const botMessageId = userMessageId + 1;
 
     let targetChatId = chatId;
 
     if (!targetChatId) {
-      const newChatId = uuidv4(); // Generate a new UUID for the chat
+      const newChatId = uuidv4();
       const newChat = {
         id: newChatId,
         name: `Chat ${new Date().toLocaleString()}`,
@@ -45,10 +46,10 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       };
       addChat(newChat);
       targetChatId = newChatId;
-      navigate(`/u/${newChatId}`); // Navigate to the new chat
+      navigate(`/u/${newChatId}`);
     }
 
-    addMessageToChat(targetChatId ?? "", {
+    addMessageToChat(targetChatId, {
       id: userMessageId,
       username: "User",
       text: input,
@@ -56,21 +57,9 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       avatar: "https://i.pravatar.cc/300",
     });
 
-    setInput("");
+    setInput(""); // Clear input after submitting
 
-    if (!targetChatId) {
-      const newChatId = uuidv4(); // Generate a new UUID for the chat
-      const newChat = {
-        id: newChatId,
-        name: `Chat ${new Date().toLocaleString()}`,
-        messages: [],
-      };
-      addChat(newChat);
-      targetChatId = newChatId;
-      navigate(`/u/${newChatId}`); // Navigate to the new chat
-    }
-
-    addMessageToChat(targetChatId ?? "", {
+    addMessageToChat(targetChatId, {
       id: botMessageId,
       username: "iBuu",
       text: "",
@@ -82,13 +71,13 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
     try {
       const data = await fetchResponse(input);
 
-      updateMessage(targetChatId ?? "", botMessageId, {
+      updateMessage(targetChatId, botMessageId, {
         text: data.text,
         audioUrl: data.audio,
         loading: false,
       });
     } catch (error) {
-      updateMessage(targetChatId ?? "", botMessageId, { text: "Error occurred", loading: false });
+      updateMessage(targetChatId, botMessageId, { text: "Error occurred", loading: false });
     }
   };
 
@@ -101,19 +90,13 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         >
-          <textarea
+          <Textarea
             ref={textareaRef}
-            placeholder="Enter a prompt here"
-            className="flex-grow bg-transparent p-2 text-gray-900 placeholder-gray-400 resize-none h-12 text-base focus:outline-none w-full"
+            variant="faded"
             value={input}
             onChange={handleInputChange}
-            style={{
-              overflow: "hidden", // Hide scroll bar
-              whiteSpace: "pre-wrap", // Handle new lines properly
-              border: "none", // Remove border
-              outline: "none", // Remove outline
-            }}
-            rows={1}
+            placeholder="Enter a prompt here"
+            className="col-span-12 md:col-span-6 mb-6 md:mb-0"
           />
         </div>
         <FontAwesomeIcon icon={faMicrophone} className="ml-3 text-2xl" />

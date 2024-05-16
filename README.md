@@ -25,3 +25,4 @@ For more details about the API project, please refer to the [API repository](htt
 ![Image 1](images/1.png)
 
 ![Image 2](images/2.png)
+

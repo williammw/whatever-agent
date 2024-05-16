@@ -1,4 +1,3 @@
-// src/components/Sidebar.tsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Sidebar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { chats, addChat } = useMessages();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleCreateChat = () => {
@@ -66,9 +65,15 @@ const Sidebar: React.FC = () => {
       </div>
       {user && (
         <div className="user-info mt-4 p-4 bg-gray-200 rounded-lg">
-          <img src={user.photoURL} alt={`${user.displayName}'s avatar`} className="w-10 h-10 rounded-full mb-2" />
+          <img src={user.photoURL ?? ''} alt={`${user.displayName}'s avatar`} className="w-10 h-10 rounded-full mb-2" />
           <h4 className="text-lg font-semibold">{user.displayName}</h4>
           <p className="text-sm">{user.email}</p>
+          <button
+            onClick={logout}
+            className="mt-2 p-2 bg-red-500 text-white rounded"
+          >
+            Logout
+          </button>
         </div>
       )}
       <div className="flex-grow overflow-y-auto">

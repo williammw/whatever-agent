@@ -9,8 +9,6 @@ const apiClient = axios.create({
 });
 
 export const fetchResponseStream = (input: string) => {
-  // alert(apiBaseUrl)
-
   return new EventSourcePolyfill(`${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
 };
 

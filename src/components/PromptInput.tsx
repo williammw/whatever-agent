@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperclip, faMicrophone, faTurnUp, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faPaperclip, faTurnUp, faStop } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useMessages } from "../context/MessagesContext";
 import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from "@nextui-org/react";
+import { fetchResponseStream } from "../services/apiService";
 const apiBaseUrl = import.meta.env.VITE_APP_API_URL;
 
 interface PromptInputProps {
@@ -42,7 +43,8 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
     let targetChatId = chatId;
 
-    if (!targetChatId) {
+    // Check if targetChatId is valid and exists in chats, otherwise, create a new chat
+    if (!targetChatId || !chats.find(chat => chat.id === targetChatId)) {
       const newChatId = uuidv4();
       const newChat = {
         id: newChatId,
@@ -73,8 +75,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       loading: true,
     });
 
-    const es = new EventSource(`${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
-  //  alert(apiBaseUrl)
+    const es = fetchResponseStream(input);
     setEventSource(es);
 
     es.onmessage = (event) => {
@@ -90,7 +91,9 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
         es.close();
         setLoading(false);
       } else {
-        updateMessage(targetChatId, botMessageId, { text: data, loading: true });
+        console.log(`Received data: ${data}`);
+        // Ensure the text is appended
+        updateMessage(targetChatId, botMessageId, { text: data });
       }
     };
 
@@ -108,7 +111,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       setLoading(false);
     }
   };
-  console.log(apiBaseUrl)
+
   return (
     <form onSubmit={handleSubmit} className="p-4 rounded-lg">
       <div className="flex items-center text-gray-900">
@@ -127,7 +130,6 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
             className="col-span-12 md:col-span-6 mb-6 md:mb-0"
           />
         </div>
-        <FontAwesomeIcon icon={faMicrophone} className="ml-3 text-2xl" />
         <button type="submit" disabled={loading}>
           <FontAwesomeIcon icon={faTurnUp} className="ml-3 text-2xl" />
         </button>

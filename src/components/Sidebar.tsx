@@ -1,22 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faPlus, faEdit, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useSidebar } from "../context/SidebarContext";
-import { Image, Button, Input } from "@nextui-org/react";
+import { faTimes, faPlus, faEdit, faCheck, faBars } from "@fortawesome/free-solid-svg-icons";
+import { Input } from "@nextui-org/react";
 import { useMessages } from "../context/MessagesContext";
-import { DateRangePicker } from "@nextui-org/date-picker";
-import logo from "../assets/logo.png";
 import { useAuth } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
+import { useSidebar } from '../context/SidebarContext'; // Import the custom hook
 
 const Sidebar: React.FC = () => {
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { isSidebarOpen, toggleSidebar, setIsSidebarOpen } = useSidebar(); // Use the custom hook
   const { chats, addChat, updateChat, deleteChat } = useMessages();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState<string>("");
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Set the initial state
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setIsSidebarOpen]);
 
   const handleCreateChat = () => {
     const newChatId = uuidv4();
@@ -55,19 +68,16 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div
-      className={`h-full min-h-screen transition-all duration-300 bg-gray-800 text-white flex flex-col ${isSidebarOpen ? 'sidebar-visible' : 'sidebar-hidden'}`}
-    >
-      <div className="flex justify-between items-center p-4">
-        <div className="flex items-center">
-          <Image
-            src={logo}
-            alt="Umami Logo"
-            width={32}
-            height={32}
-            className="mr-2"
+    <div className={`flex flex-col h-full min-h-screen bg-gray-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-80" : "w-0"}`}>
+      <div className="flex justify-between items-center p-6">
+        <div className="flex">
+          <FontAwesomeIcon
+            icon={faBars}
+            onClick={toggleSidebar}
+            className="cursor-pointer text-xl "
+            title="Close"
           />
-          <span className="text-xl font-semibold ml-2">Umami</span>
+          {/* <span className="text-xl font-semibold ml-2">Umami</span> */}
         </div>
         <div className="flex items-center ml-auto">
           <FontAwesomeIcon
@@ -76,32 +86,10 @@ const Sidebar: React.FC = () => {
             onClick={handleCreateChat}
             title="Create"
           />
-          <FontAwesomeIcon
-            icon={faTimes}
-            onClick={toggleSidebar}
-            className="cursor-pointer ml-4 text-xl"
-            title="Close"
-          />
         </div>
       </div>
 
       <div className="flex-grow overflow-y-auto p-4">
-        <div className="mb-4">
-          <DateRangePicker label="Stay duration" className="max-w-xs w-full" />
-        </div>
-        {user && (
-          <div className="user-info mb-4 p-4 bg-gray-200 rounded-lg">
-            <img src={user.photoURL ?? ''} alt={`${user.displayName}'s avatar`} className="w-10 h-10 rounded-full mb-2" />
-            <h4 className="text-lg font-semibold">{user.displayName}</h4>
-            <p className="text-sm">{user.email}</p>
-            <button
-              onClick={logout}
-              className="mt-2 p-2 bg-red-500 text-white rounded"
-            >
-              Logout
-            </button>
-          </div>
-        )}
         <div>
           <h2 className="text-lg font-semibold mb-4">Chat</h2>
           {chats.map((chat) => (

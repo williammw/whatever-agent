@@ -1,4 +1,3 @@
-/* src/styles/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +6,6 @@
 .sticky-footer-input {
   margin-bottom: -1px; /* Fixes a 1px gap that can sometimes appear due to subpixel rendering */
 }
-
 
 /* For Webkit browsers like Chrome/Safari */
 .hide-scrollbar::-webkit-scrollbar {

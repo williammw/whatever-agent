@@ -28,7 +28,6 @@ const Content: React.FC = () => {
 
   return (
     <>
-      <Navbar />
       <div className="flex h-full flex-col">
         <div className="flex-grow overflow-y-auto pt-4">
           <div
@@ -53,10 +52,10 @@ const Content: React.FC = () => {
             <div ref={messagesEndRef} />
           </div>
         </div>
-      </div>
-      <div className="sticky bottom-0 w-[80%] mx-auto pb-4 z-10">
-        <PromptInput chatId={chat ? chat.id : undefined} />
-        <div className="relative px-2 py-2 text-center text-xs text-token-text-secondary md:px-[60px] bg-white"></div>
+        <div className="sticky bottom-0 w-[80%] mx-auto pb-4 z-10">
+          <PromptInput chatId={chat ? chat.id : undefined} />
+          <div className="relative px-2 py-2 text-center text-xs text-token-text-secondary md:px-[60px] bg-white"></div>
+        </div>
       </div>
     </>
   );

@@ -74,7 +74,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
     });
 
     const es = new EventSource(`${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
-   alert(apiBaseUrl)
+  //  alert(apiBaseUrl)
     setEventSource(es);
 
     es.onmessage = (event) => {

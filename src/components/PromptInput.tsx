@@ -6,7 +6,6 @@ import { useMessages } from "../context/MessagesContext";
 import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from "@nextui-org/react";
 import { fetchResponseStream } from "../services/apiService";
-const apiBaseUrl = import.meta.env.VITE_APP_API_URL;
 
 interface PromptInputProps {
   chatId?: string;

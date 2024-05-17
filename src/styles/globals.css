@@ -118,3 +118,40 @@ body {
     font-size: 0.875rem;
   }
 }
+.track-vertical {
+  width: 8px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+.thumb-vertical {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.thumb-vertical:hover {
+  background-color: #555;
+}
+
+/* custom perfectscroll bar */
+/* Customize scrollbar track */
+.ps__rail-y {
+  
+  background-color: #f1f1f1; /* Track color */
+}
+
+/* Customize scrollbar thumb */
+.ps__thumb-y {
+  background-color: #888; /* Thumb color */
+  
+  
+}
+
+.ps__thumb-y:hover {
+  background-color: #555; /* Thumb color on hover */
+}
+
+/* Customize scrollbar thumb length */
+.ps__rail-y .ps__thumb-y {
+  height: 20px; /* Custom height for thumb */
+}

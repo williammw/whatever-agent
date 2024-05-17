@@ -17,6 +17,8 @@ const Navbar: React.FC = () => {
           className="cursor-pointer ml-2 text-lg "
         />
       </div>
+      { /* show the title*/}
+      <div className="text-lg font-semibold ml-2">Umami</div>
       {/* Right side - Share button */}
       <div className="bg-white w-[80%] h-[100%]"></div>
       <Button auto flat bordered color="primary" variant="faded">

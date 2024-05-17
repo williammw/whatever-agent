@@ -57,7 +57,7 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
                 formattedText
               )}
             </div>
-            <span className="ml-2 text-sm font-semibold">{username}</span>
+            {/* <span className="ml-2 text-sm font-semibold">{username}</span> */}
             <img
               src={avatar}
               alt={`${username}'s avatar`}
@@ -72,7 +72,7 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
               className="w-8 h-8 rounded-full mr-2"
             />
             {/* <span className="mr-2 text-sm font-semibold">{role}</span> */}
-            <div className="bg-gray-100 text-sm p-3 rounded-lg break-words max-w-[80%] mt-2 message-text">
+            <div className=" text-sm p-3 rounded-lg break-words max-w-[80%] mt-2 message-text">
               {false ? (
                 <Skeleton className='w-full h-24' />
               ) : (

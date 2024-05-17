@@ -25,3 +25,8 @@ dist-ssr
 .env
 .env
 firebaseConfig.ts
+localhost+3-key.pem
+localhost+3.pem
+.env
+.env.mobile
+.env

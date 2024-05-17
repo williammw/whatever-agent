@@ -12,6 +12,7 @@ interface AuthContextType {
   loginWithEmail: (email: string, password: string) => Promise<void>;
   registerWithEmail: (email: string, password: string) => Promise<UserCredential>;
   logout: () => void;
+  mockLogin: (email: string, password: string) => void; // Add mockLogin property
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -97,8 +98,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAuthenticated(false);
   };
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, isNewUser, loginWithGoogle, loginWithEmail, registerWithEmail, logout, auth }}>
+   const mockLogin = (email: string, password: string) => {
+    // Mock login implementation
+    const mockUser = {
+      uid: "123456",
+      email,
+      displayName: "Mock User",
+      emailVerified: true,
+    };
+    setUser(mockUser as User); // Type cast for mock user
+    setIsAuthenticated(true);
+    setIsNewUser(false); // Assuming mock user is not a new user
+  };
+
+ return (
+    <AuthContext.Provider value={{ isAuthenticated, user, isNewUser, loginWithEmail, loginWithGoogle, registerWithEmail, logout, mockLogin, auth }}>
       {children}
     </AuthContext.Provider>
   );

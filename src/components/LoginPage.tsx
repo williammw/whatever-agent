@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { loginWithEmail, loginWithGoogle, isAuthenticated } = useAuth();
+  const { loginWithEmail, loginWithGoogle, mockLogin } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("LoginPage useEffect:", { isAuthenticated });
-    if (isAuthenticated) {
-      navigate("/default");
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await loginWithEmail(email, password);
-      navigate("/default");
+      if (process.env.NODE_ENV === "development") {
+        mockLogin(email, password);
+      } else {
+        await loginWithEmail(email, password);
+      }
+      navigate("/");
     } catch (error) {
       console.error("Login failed", error);
     }

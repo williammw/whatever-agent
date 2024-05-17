@@ -23,6 +23,8 @@ interface Chat {
 interface MessagesContextType {
   chats: Chat[];
   addChat: (chat: Chat) => void;
+  updateChat: (chatId: string, newName: string) => void;
+  deleteChat: (chatId: string) => void;
   addMessageToChat: (chatId: string, message: Message) => void;
   updateMessage: (chatId: string, messageId: number, updatedMessage: Partial<Message>) => void;
 }
@@ -34,6 +36,18 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const addChat = (chat: Chat) => {
     setChats((prevChats) => [...prevChats, chat]);
+  };
+
+  const updateChat = (chatId: string, newName: string) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId ? { ...chat, name: newName } : chat
+      )
+    );
+  };
+
+  const deleteChat = (chatId: string) => {
+    setChats((prevChats) => prevChats.filter((chat) => chat.id !== chatId));
   };
 
   const addMessageToChat = (chatId: string, message: Message) => {
@@ -52,11 +66,7 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
               ...chat,
               messages: chat.messages.map((message) =>
                 message.id === messageId
-                  ? {
-                      ...message,
-                      ...updatedMessage,
-                      text: (message.text || '') + (updatedMessage.text || '')
-                    }
+                  ? { ...message, ...updatedMessage, text: message.text + (updatedMessage.text || '') }
                   : message
               ),
             }
@@ -66,7 +76,7 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   return (
-    <MessagesContext.Provider value={{ chats, addChat, addMessageToChat, updateMessage }}>
+    <MessagesContext.Provider value={{ chats, addChat, updateChat, deleteChat, addMessageToChat, updateMessage }}>
       {children}
     </MessagesContext.Provider>
   );

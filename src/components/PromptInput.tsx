@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useMessages } from "../context/MessagesContext";
 import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from "@nextui-org/react";
+const apiBaseUrl = import.meta.env.VITE_APP_API_URL;
 
 interface PromptInputProps {
   chatId?: string;
@@ -72,7 +73,8 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       loading: true,
     });
 
-    const es = new EventSource(`http://localhost:8000/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
+    const es = new EventSource(`${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
+   alert(apiBaseUrl)
     setEventSource(es);
 
     es.onmessage = (event) => {
@@ -106,7 +108,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       setLoading(false);
     }
   };
-
+  console.log(apiBaseUrl)
   return (
     <form onSubmit={handleSubmit} className="p-4 rounded-lg">
       <div className="flex items-center text-gray-900">

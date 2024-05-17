@@ -33,3 +33,90 @@
 .message-text {
   white-space: pre-wrap; /* Maintains whitespace and wraps text */
 }
+
+/* Hide sidebar on mobile by default */
+@media (max-width: 768px) {
+  .sidebar-hidden {
+    display: none;
+  }
+
+  .sidebar-visible {
+    display: block;
+  }
+}
+
+/* Global styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, and Opera */
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .sidebar-hidden {
+    display: none;
+  }
+
+  .sidebar-visible {
+    display: block;
+  }
+
+  .flex-grow {
+    flex-grow: 1;
+  }
+
+  .p-4 {
+    padding: 1rem;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+
+  .mt-2 {
+    margin-top: 0.5rem;
+  }
+
+  .mt-4 {
+    margin-top: 1rem;
+  }
+
+  .rounded {
+    border-radius: 0.25rem;
+  }
+
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+
+  .text-lg {
+    font-size: 1.125rem;
+  }
+
+  .text-xl {
+    font-size: 1.25rem;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+}

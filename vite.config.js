@@ -12,6 +12,11 @@ export default defineConfig(({ mode }) => {
     server: {
       host: isMobile ? '0.0.0.0' : 'localhost',
       port: 5173,
+      // Remove COOP and COEP headers
+      // headers: {
+      //   'Cross-Origin-Opener-Policy': 'same-origin',
+      //   'Cross-Origin-Embedder-Policy': 'require-corp',
+      // },
     },
   };
 });

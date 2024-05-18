@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { EventSourcePolyfill } from 'event-source-polyfill';
+
 const apiBaseUrl = import.meta.env.VITE_APP_API_URL;
+
 const apiClient = axios.create({
   baseURL: `${apiBaseUrl}`,
   headers: {
@@ -9,6 +11,7 @@ const apiClient = axios.create({
 });
 
 export const fetchResponseStream = (input: string) => {
+  console.log('Creating EventSource for:', `${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
   return new EventSourcePolyfill(`${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
 };
 

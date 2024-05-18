@@ -77,7 +77,6 @@ const Sidebar: React.FC = () => {
             className="cursor-pointer text-xl "
             title="Close"
           />
-          {/* <span className="text-xl font-semibold ml-2">Umami</span> */}
         </div>
         <div className="flex items-center ml-auto">
           <FontAwesomeIcon
@@ -99,7 +98,7 @@ const Sidebar: React.FC = () => {
                   value={newTitle}
                   onChange={handleTitleChange}
                   onBlur={() => handleTitleBlur(chat.id)}
-                  onKeyPress={(e) => handleTitleKeyPress(e, chat.id)}
+                  onKeyUp={(e) => handleTitleKeyPress(e, chat.id)}
                   autoFocus
                 />
               ) : (

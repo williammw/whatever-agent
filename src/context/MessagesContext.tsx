@@ -23,6 +23,8 @@ interface Chat {
 interface MessagesContextType {
   chats: Chat[];
   addChat: (chat: Chat) => void;
+  updateChat: (chatId: string, name: string) => void;
+  deleteChat: (chatId: string) => void;
   addMessageToChat: (chatId: string, message: Message) => void;
   updateMessage: (chatId: string, messageId: number, updatedMessage: Partial<Message>) => void;
 }
@@ -34,6 +36,18 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const addChat = (chat: Chat) => {
     setChats((prevChats) => [...prevChats, chat]);
+  };
+
+  const updateChat = (chatId: string, name: string) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId ? { ...chat, name } : chat
+      )
+    );
+  };
+
+  const deleteChat = (chatId: string) => {
+    setChats((prevChats) => prevChats.filter((chat) => chat.id !== chatId));
   };
 
   const addMessageToChat = (chatId: string, message: Message) => {
@@ -50,9 +64,7 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
         if (chat.id === chatId) {
           const updatedMessages = chat.messages.map((message) => {
             if (message.id === messageId) {
-              const newText = updatedMessage.text !== undefined ? (message.text + updatedMessage.text) : message.text;
-              console.log(`Updating message ${messageId} in chat ${chatId} with text: ${newText}`);
-              return { ...message, ...updatedMessage, text: newText };
+              return { ...message, ...updatedMessage, text: message.text + (updatedMessage.text || '') };
             }
             return message;
           });
@@ -64,7 +76,7 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   return (
-    <MessagesContext.Provider value={{ chats, addChat, addMessageToChat, updateMessage }}>
+    <MessagesContext.Provider value={{ chats, addChat, updateChat, deleteChat, addMessageToChat, updateMessage }}>
       {children}
     </MessagesContext.Provider>
   );

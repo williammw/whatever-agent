@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Content from "./components/Content";
 import { SidebarProvider } from './context/SidebarContext';
@@ -50,6 +50,7 @@ const App: React.FC = () => {
 
 const ContentWithPromptInput: React.FC = () => {
   const { chatId } = useParams<{ chatId: string }>();
+  console.log('ContentWithPromptInput chatId:', chatId);
   return (
     <>
       <Content />

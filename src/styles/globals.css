@@ -155,3 +155,7 @@ body {
 .ps__rail-y .ps__thumb-y {
   height: 20px; /* Custom height for thumb */
 }
+
+textarea{
+  font-size:16px !important;
+}

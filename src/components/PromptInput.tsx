@@ -13,7 +13,6 @@ interface PromptInputProps {
 
 const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
   const [input, setInput] = useState<string>("");
-  const [isFocused, setIsFocused] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isStopped, setIsStopped] = useState<boolean>(false);
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
@@ -42,8 +41,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
     let targetChatId = chatId;
 
-    // Check if targetChatId is valid and exists in chats, otherwise, create a new chat
-    if (!targetChatId || !chats.find(chat => chat.id === targetChatId)) {
+    if (!targetChatId || !chats.some(chat => chat.id === targetChatId)) {
       const newChatId = uuidv4();
       const newChat = {
         id: newChatId,
@@ -77,26 +75,33 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
     const es = fetchResponseStream(input);
     setEventSource(es);
 
+    es.onopen = () => {
+      console.log('EventSource connection opened');
+    };
+
     es.onmessage = (event) => {
+      console.log('Received event:', event);
       if (isStopped) {
         es.close();
         return;
       }
 
       const { data } = event;
+      console.log(`Received data: ${data}`);
       if (data.startsWith("[AUDIO]")) {
         const audioBase64 = data.replace("[AUDIO]", "");
         updateMessage(targetChatId, botMessageId, { audioUrl: `data:audio/mp3;base64,${audioBase64}`, loading: false });
         es.close();
         setLoading(false);
       } else {
-        console.log(`Received data: ${data}`);
-        // Ensure the text is appended
+        console.log(`Updating message with data: ${data}`);
         updateMessage(targetChatId, botMessageId, { text: data });
+        console.log(`Updated message: ${data}`);
       }
     };
 
-    es.onerror = () => {
+    es.onerror = (error) => {
+      console.error('EventSource failed:', error);
       updateMessage(targetChatId, botMessageId, { text: "Error occurred", loading: false });
       es.close();
       setLoading(false);
@@ -115,18 +120,14 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
     <form onSubmit={handleSubmit} className="p-4 rounded-lg">
       <div className="flex items-center text-gray-900">
         <FontAwesomeIcon icon={faPaperclip} className="mr-3 text-2xl" />
-        <div
-          className={`flex-grow rounded-md p-2 ${isFocused ? 'border-2 border-gray-400' : 'border border-gray-300'}`}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-        >
+        <div className="w-[80%]">
           <Textarea
             ref={textareaRef}
             variant="faded"
             value={input}
             onChange={handleInputChange}
             placeholder="Enter a prompt here"
-            className="col-span-12 md:col-span-6 mb-6 md:mb-0"
+            className="flex-grow rounded-md p-2 col-span-12 md:col-span-6 mb-6 md:mb-0 text-base leading-6"
           />
         </div>
         <button type="submit" disabled={loading}>

@@ -1,60 +1,59 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { loginWithEmail, loginWithGoogle, mockLogin } = useAuth();
+  const { loginWithGoogle, loginWithEmail, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      if (process.env.NODE_ENV === "development") {
-        mockLogin(email, password);
-      } else {
-        await loginWithEmail(email, password);
-      }
-      navigate("/");
-    } catch (error) {
-      console.error("Login failed", error);
+    await loginWithEmail(email, password);
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    await loginWithGoogle();
+    if (isAuthenticated) {
+      navigate('/');
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="p-6 bg-white rounded shadow-md">
-        <h2 className="text-2xl mb-4">Login</h2>
+      <form onSubmit={handleEmailLogin} className="p-4 bg-white rounded shadow-md">
+        <h2 className="mb-4 text-lg">Login</h2>
         <div className="mb-4">
-          <label className="block mb-1">Email</label>
+          <label className="block mb-2">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-1">Password</label>
+          <label className="block mb-2">Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
-        <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">Login</button>
-        <p className="mt-4">
-          Do not have an account?{" "}
-          <Link to="/register" className="text-blue-500">
-            Register
-          </Link>
-        </p>
+        <button type="submit" className="w-full p-2 mb-4 text-white bg-blue-500 rounded">
+          Login
+        </button>
         <button
           type="button"
-          onClick={loginWithGoogle}
-          className="w-full p-2 bg-red-500 text-white rounded mt-4"
+          onClick={handleGoogleLogin}
+          className="w-full p-2 text-white bg-red-500 rounded"
         >
           Login with Google
         </button>

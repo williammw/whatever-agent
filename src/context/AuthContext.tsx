@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User, signOut, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db, provider } from "../firebaseConfig";
 
@@ -7,6 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   loginWithGoogle: () => void;
+  loginWithEmail: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -50,12 +51,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const user = result.user;
       console.log("Google login successful: ", user);
       await checkIfNewUser(user);
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'auth/popup-closed-by-user') {
         console.warn("The user closed the Google sign-in popup.");
       } else {
         console.error("Google login failed", error);
       }
+    }
+  };
+
+  const loginWithEmail = async (email: string, password: string) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("Email login successful: ", user);
+      setUser(user);
+      setIsAuthenticated(true);
+      await checkIfNewUser(user);
+    } catch (error) {
+      console.error("Email login failed", error);
     }
   };
 
@@ -70,7 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [isAuthenticated, user]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, loginWithGoogle, loginWithEmail, logout }}>
       {children}
     </AuthContext.Provider>
   );

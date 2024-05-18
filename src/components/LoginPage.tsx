@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,17 +11,18 @@ const LoginPage: React.FC = () => {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     await loginWithEmail(email, password);
-    if (isAuthenticated) {
-      navigate('/');
-    }
   };
 
   const handleGoogleLogin = async () => {
     await loginWithGoogle();
+  };
+
+  useEffect(() => {
     if (isAuthenticated) {
+      console.log('login successful');
       navigate('/');
     }
-  };
+  }, [isAuthenticated]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

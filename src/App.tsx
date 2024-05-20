@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import LoadingSpinner from "./components/LoadingSpinner";
 import PromptInput from "./components/PromptInput";
 import ErrorBoundary from "./components/ErrorBoundary";
+import AudioRecorder from "./components/AudioRecorder";
 
 // Lazy load components
 const LoginPage = lazy(() => import("./components/LoginPage"));
@@ -38,6 +39,7 @@ const App: React.FC = () => {
                         <Routes>
                           <Route path="/login" element={<LoginPage />} />
                           <Route path="/register" element={<RegisterPage />} />
+                          <Route path="/asr" element={<AudioRecorder />} />
                           <Route path="/verify-email" element={<VerifyEmailPage />} />
                           <Route path="/" element={<ProtectedRoute component={ContentWithPromptInput} />} />
                           <Route path="/u/:chatId" element={<ProtectedRoute component={ContentWithPromptInput} />} />
@@ -62,6 +64,7 @@ const ContentWithPromptInput: React.FC = () => {
   return (
     <>
       <Content />
+      {/* <AudioRecorder/> */}
       <div className="sticky bottom-0 w-[80%] mx-auto pb-4 z-10">
         <PromptInput chatId={chatId} />
         <div className="relative px-2 py-2 text-center text-xs text-token-text-secondary md:px-[60px] bg-white"></div>

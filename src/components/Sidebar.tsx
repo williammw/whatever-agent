@@ -6,12 +6,12 @@ import { Input } from "@nextui-org/react";
 import { useMessages } from "../context/MessagesContext";
 import { useAuth } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
-import { useSidebar } from '../context/SidebarContext'; // Import the custom hook
+import { useSidebar } from '../context/SidebarContext';
 
 const Sidebar: React.FC = () => {
-  const { isSidebarOpen, toggleSidebar, setIsSidebarOpen } = useSidebar(); // Use the custom hook
+  const { isSidebarOpen, toggleSidebar, setIsSidebarOpen } = useSidebar();
   const { chats, addChat, updateChat, deleteChat } = useMessages();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState<string>("");
@@ -26,12 +26,17 @@ const Sidebar: React.FC = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Set the initial state
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, [setIsSidebarOpen]);
 
   const handleCreateChat = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
     const newChatId = uuidv4();
     const newChat = {
       id: newChatId,
@@ -67,71 +72,85 @@ const Sidebar: React.FC = () => {
     deleteChat(chatId);
   };
 
+  const handleOverlayClick = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
-    <div className={`flex flex-col h-full min-h-screen bg-gray-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-80" : "w-0"}`}>
-      <div className="flex justify-between items-center p-6">
-        <div className="flex">
-          <FontAwesomeIcon
-            icon={faBars}
-            onClick={toggleSidebar}
-            className="cursor-pointer text-xl "
-            title="Close"
-          />
+    <>
+      <div className={`flex flex-col h-full min-h-screen bg-gray-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-80" : "w-0"}`}>
+        <div className="flex justify-between items-center p-6">
+          <div className="flex">
+            <FontAwesomeIcon
+              icon={faBars}
+              onClick={toggleSidebar}
+              className="cursor-pointer text-xl"
+              title="Close"
+            />
+          </div>
+          <div className="flex items-center ml-auto">
+            <FontAwesomeIcon
+              icon={faPlus}
+              className="cursor-pointer text-xl"
+              onClick={handleCreateChat}
+              title="Create"
+            />
+          </div>
         </div>
-        <div className="flex items-center ml-auto">
-          <FontAwesomeIcon
-            icon={faPlus}
-            className="cursor-pointer text-xl"
-            onClick={handleCreateChat}
-            title="Create"
-          />
+
+        <div className="flex-grow overflow-y-auto p-4">
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Chat</h2>
+            {chats.map((chat) => (
+              <div key={chat.id} className="flex items-center justify-between mb-2">
+                {editingChatId === chat.id ? (
+                  <Input
+                    value={newTitle}
+                    onChange={handleTitleChange}
+                    onBlur={() => handleTitleBlur(chat.id)}
+                    onKeyUp={(e) => handleTitleKeyPress(e, chat.id)}
+                    autoFocus
+                  />
+                ) : (
+                  <Link
+                    to={`/u/${chat.id}`}
+                    className="block p-2 hover:bg-gray-700 rounded-md flex-grow"
+                  >
+                    {chat.name}
+                  </Link>
+                )}
+                {editingChatId === chat.id ? (
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    className="cursor-pointer ml-2 text-lg"
+                    onClick={() => handleTitleBlur(chat.id)}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faEdit}
+                    className="cursor-pointer ml-2 text-lg"
+                    onClick={() => handleEditClick(chat.id, chat.name)}
+                  />
+                )}
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  className="cursor-pointer ml-2 text-lg"
+                  onClick={() => handleDeleteChat(chat.id)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="flex-grow overflow-y-auto p-4">
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Chat</h2>
-          {chats.map((chat) => (
-            <div key={chat.id} className="flex items-center justify-between mb-2">
-              {editingChatId === chat.id ? (
-                <Input
-                  value={newTitle}
-                  onChange={handleTitleChange}
-                  onBlur={() => handleTitleBlur(chat.id)}
-                  onKeyUp={(e) => handleTitleKeyPress(e, chat.id)}
-                  autoFocus
-                />
-              ) : (
-                <Link
-                  to={`/u/${chat.id}`}
-                  className="block p-2 hover:bg-gray-700 rounded-md flex-grow"
-                >
-                  {chat.name}
-                </Link>
-              )}
-              {editingChatId === chat.id ? (
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className="cursor-pointer ml-2 text-lg"
-                  onClick={() => handleTitleBlur(chat.id)}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  className="cursor-pointer ml-2 text-lg"
-                  onClick={() => handleEditClick(chat.id, chat.name)}
-                />
-              )}
-              <FontAwesomeIcon
-                icon={faTimes}
-                className="cursor-pointer ml-2 text-lg"
-                onClick={() => handleDeleteChat(chat.id)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      {/* Overlay */}
+      {isSidebarOpen && window.innerWidth <= 768 && (
+        <div
+          className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"
+          onClick={handleOverlayClick}
+        />
+      )}
+    </>
   );
 };
 

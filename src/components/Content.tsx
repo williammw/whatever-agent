@@ -24,24 +24,32 @@ const Content: React.FC = () => {
   }, [chat?.messages]);
 
   return (
-    <PerfectScrollbar>
-      <div className="flex-grow overflow-y-auto pt-4 h-full">
-        {(!chat || chat.messages.length === 0) ? (
-          <div className="flex justify-center items-center h-full">
-            <p className="text-xl">Hi, please say something!</p>
-          </div>
-        ) : (
-          chat.messages.map((message, index) => (
-            <div key={message.id} style={{ paddingTop: index === 0 ? "60px" : "0" }}>
-              <div className="text-left text-xs text-token-text-secondary pt-4">
-                <Message {...message} />
-              </div>
+    <div className="relative h-full">
+      {/* Top ignored area */}
+      <div className="absolute top-0 left-0 w-full h-16 bg-transparent pointer-events-none z-10"></div>
+
+      <PerfectScrollbar>
+        <div className="flex-grow overflow-y-auto h-full pt-16">
+          {(!chat || chat.messages.length === 0) ? (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-xl">Hi, please say something!</p>
             </div>
-          ))
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-    </PerfectScrollbar>
+          ) : (
+            chat.messages.map((message, index) => (
+              <div key={message.id} style={{ paddingTop: index === 0 ? "60px" : "0" }}>
+                <div className="text-left text-xs text-token-text-secondary pt-4">
+                  <Message {...message} />
+                </div>
+              </div>
+            ))
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </PerfectScrollbar>
+
+      {/* Bottom ignored area */}
+      <div className="absolute bottom-0 left-0 w-full h-16 bg-transparent pointer-events-none z-10"></div>
+    </div>
   );
 };
 

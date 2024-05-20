@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
-const apiBaseUrl = import.meta.env.VITE_APP_API_URL;
+const apiBaseUrl = import.meta.env.VITE_APP_APIURL;
+const whoami = import.meta.env.VITE_APP_WHOAMI;
+console.log('whoami:', whoami);
+console.log('apiBaseUrl:', apiBaseUrl);
 
 const apiClient = axios.create({
   baseURL: `${apiBaseUrl}`,

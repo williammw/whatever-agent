@@ -9,7 +9,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start:local": "vite --mode local",
-    "start:mobile": "vite --mode mobile"
+    "start:mobile": "vite --mode mobile",
+    "start:prod": "vite --mode prod"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
@@ -31,6 +32,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
+    "react-mic": "^12.4.6",
     "react-perfect-scrollbar": "^1.5.8",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.22.0",

@@ -30,3 +30,7 @@ localhost+3.pem
 .env
 .env.mobile
 .env
+.env
+.env.prod
+.env
+.env

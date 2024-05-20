@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlayCircle, faPauseCircle, faThumbsDown, faCopy } from "@fortawesome/free-regular-svg-icons";
+import { faPlayCircle, faPauseCircle, faThumbsDown ,faCopy} from "@fortawesome/free-regular-svg-icons";
 import { Skeleton } from "@nextui-org/react";
 
 interface MessageProps {
@@ -33,6 +33,7 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
   useEffect(() => {
     if (audioUrl) {
       audioRef.current = new Audio(audioUrl);
+      audioRef.current.addEventListener('ended', () => setIsPlaying(false));
     }
   }, [audioUrl]);
 
@@ -52,10 +53,8 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
               {loading ? (
                 <Skeleton className='w-full h-24' />
               ) : (
-                  formattedText
-                  
+                formattedText
               )}
-              
             </div>
             <img
               src={avatar}
@@ -70,9 +69,8 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
               alt={`${username}'s avatar`}
               className="w-8 h-8 rounded-full mr-2"
             />
-            <div className=" text-[16px] leading-[24px] p-3 rounded-lg break-words max-w-[80%] mt-2 message-text">
+            <div className="text-[16px] leading-[24px] p-3 rounded-lg break-words max-w-[80%] mt-2 message-text">
               {formattedText}
-              
             </div>
           </div>
         )}
@@ -86,16 +84,17 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
             </button>
             <button className="ml-2">
               <FontAwesomeIcon
-                icon={faThumbsDown}
-                className="cursor-pointer w-4 h-4 fa-fw"
-              />
-            </button>
-            <button className="ml-2">
-              <FontAwesomeIcon
                 icon={faCopy}
                 className="cursor-pointer w-4 h-4 fa-fw"
               />
             </button>
+              <button className="ml-2">
+              <FontAwesomeIcon
+                icon={faThumbsDown}
+                className="cursor-pointer w-4 h-4 fa-fw"
+              />
+            </button>
+            
           </div>
         )}
       </div>

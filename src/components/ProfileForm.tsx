@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { auth, db, provider } from '../firebaseConfig';
 import { useNavigate } from "react-router-dom";
 
 const ProfileForm: React.FC = () => {

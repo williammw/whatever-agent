@@ -23,6 +23,7 @@ const VerifyEmailPage = lazy(() => import("./components/VerifyEmailPage"));
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
+  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

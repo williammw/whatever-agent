@@ -22,6 +22,7 @@ const Content: React.FC = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chat?.messages]);
+  // console.log('creampieCandy',chat?.messages)
 
   return (
     <div className="relative h-full">

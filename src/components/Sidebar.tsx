@@ -57,13 +57,13 @@ const Sidebar: React.FC = () => {
   };
 
   const handleTitleBlur = (chatId: string) => {
-    updateChat(chatId, newTitle);
+    updateChat(chatId, { name: newTitle });
     setEditingChatId(null);
   };
 
   const handleTitleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, chatId: string) => {
     if (e.key === "Enter") {
-      updateChat(chatId, newTitle);
+      updateChat(chatId, { name: newTitle });
       setEditingChatId(null);
     }
   };

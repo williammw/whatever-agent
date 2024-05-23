@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
@@ -51,6 +51,12 @@ const LoginPage: React.FC = () => {
         <button type="submit" className="w-full p-2 mb-4 text-white bg-blue-500 rounded">
           Login
         </button>
+        <p className="mt-4">
+          Dont have an account?{" "}
+          <Link to="/register" className="text-blue-500">
+            Register
+          </Link>
+        </p>
         <button
           type="button"
           onClick={handleGoogleLogin}

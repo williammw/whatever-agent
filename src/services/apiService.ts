@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { EventSourcePolyfill } from 'event-source-polyfill';
+import { getAuth } from 'firebase/auth';
 
 const apiBaseUrl = import.meta.env.VITE_APP_APIURL;
 const whoami = import.meta.env.VITE_APP_WHOAMI;
@@ -13,9 +14,34 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchResponseStream = (input: string) => {
-  console.log('Creating EventSource for:', `${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
-  return new EventSourcePolyfill(`${apiBaseUrl}/api/v1/agents/text_to_speech_pipeline_stream/?text=${encodeURIComponent(input)}`);
+apiClient.interceptors.request.use(async (config) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const fetchResponseStream = async (input: string) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  let token = '';
+  if (user) {
+    token = await user.getIdToken();
+  }
+
+  const response = await apiClient.post(`${apiBaseUrl}/api/v1/agents/generate_stream_url/`, { text: input, token });
+  const { stream_url } = response.data;
+
+  const es = new EventSourcePolyfill(`${apiBaseUrl}${stream_url}?text=${encodeURIComponent(input)}&token=${token}`, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return es;
 };
 
 export default apiClient;

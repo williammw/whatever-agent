@@ -72,31 +72,31 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
       loading: true,
     });
 
-    const es = fetchResponseStream(input);
+    const es = await fetchResponseStream(input);
     setEventSource(es);
+
+    let botText = "";
 
     es.onopen = () => {
       console.log('EventSource connection opened');
     };
 
     es.onmessage = (event) => {
-      console.log('Received event:', event);
       if (isStopped) {
         es.close();
         return;
       }
 
       const { data } = event;
-      console.log(`Received data: ${data}`);
       if (data.startsWith("[AUDIO]")) {
         const audioBase64 = data.replace("[AUDIO]", "");
-        updateMessage(targetChatId, botMessageId, { audioUrl: `data:audio/mp3;base64,${audioBase64}`, loading: false });
+        const audioUrl = `data:audio/mp3;base64,${audioBase64}`;
+        updateMessage(targetChatId, botMessageId, { text: botText, audioUrl, loading: false });
         es.close();
         setLoading(false);
-      } else {
-        console.log(`Updating message with data: ${data}`);
-        updateMessage(targetChatId, botMessageId, { text: data });
-        console.log(`Updated message: ${data}`);
+      } else if (data) {
+        botText += data;
+        updateMessage(targetChatId, botMessageId, { text: botText });
       }
     };
 

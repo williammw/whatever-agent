@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import React, { createContext, useContext, useState } from "react";
 
 interface Message {
   id: number;
@@ -7,11 +6,7 @@ interface Message {
   text: string;
   role: string;
   avatar: string;
-  audioUrl?: string;
   loading?: boolean;
-  userId?: number;
-  imageUrl?: string;
-  downloadUrl?: string;
 }
 
 interface Chat {
@@ -23,33 +18,31 @@ interface Chat {
 interface MessagesContextType {
   chats: Chat[];
   addChat: (chat: Chat) => void;
-  updateChat: (chatId: string, name: string) => void;
-  deleteChat: (chatId: string) => void;
   addMessageToChat: (chatId: string, message: Message) => void;
-  updateMessage: (chatId: string, messageId: number, updatedMessage: Partial<Message>) => void;
+  updateMessage: (chatId: string, messageId: number, updates: Partial<Message>) => void;
+  updateChat: (chatId: string, updates: Partial<Chat>) => void;
+  deleteChat: (chatId: string) => void;
 }
 
 const MessagesContext = createContext<MessagesContextType | undefined>(undefined);
 
-export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [chats, setChats] = useState<Chat[]>([]);
+  
 
   const addChat = (chat: Chat) => {
     setChats((prevChats) => [...prevChats, chat]);
   };
-
-  const updateChat = (chatId: string, name: string) => {
+  const updateChat = (chatId: string, updates: Partial<Chat>) => {
     setChats((prevChats) =>
       prevChats.map((chat) =>
-        chat.id === chatId ? { ...chat, name } : chat
+        chat.id === chatId ? { ...chat, ...updates } : chat
       )
     );
   };
-
-  const deleteChat = (chatId: string) => {
+   const deleteChat = (chatId: string) => {
     setChats((prevChats) => prevChats.filter((chat) => chat.id !== chatId));
   };
-
   const addMessageToChat = (chatId: string, message: Message) => {
     setChats((prevChats) =>
       prevChats.map((chat) =>
@@ -58,33 +51,33 @@ export const MessagesProvider: React.FC<{ children: ReactNode }> = ({ children }
     );
   };
 
-  const updateMessage = (chatId: string, messageId: number, updatedMessage: Partial<Message>) => {
+  const updateMessage = (chatId: string, messageId: number, updates: Partial<Message>) => {
     setChats((prevChats) =>
-      prevChats.map((chat) => {
-        if (chat.id === chatId) {
-          const updatedMessages = chat.messages.map((message) => {
-            if (message.id === messageId) {
-              return { ...message, ...updatedMessage, text: message.text + (updatedMessage.text || '') };
+      prevChats.map((chat) =>
+        chat.id === chatId
+          ? {
+              ...chat,
+              messages: chat.messages.map((msg) =>
+                msg.id === messageId ? { ...msg, ...updates } : msg
+              ),
             }
-            return message;
-          });
-          return { ...chat, messages: updatedMessages };
-        }
-        return chat;
-      })
+          : chat
+      )
     );
   };
 
   return (
-    <MessagesContext.Provider value={{ chats, addChat, updateChat, deleteChat, addMessageToChat, updateMessage }}>
+    <MessagesContext.Provider
+      value={{ chats, addChat, addMessageToChat, updateMessage, updateChat, deleteChat }}
+    >
       {children}
     </MessagesContext.Provider>
   );
 };
 
-export const useMessages = () => {
+export const useMessages = (): MessagesContextType => {
   const context = useContext(MessagesContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useMessages must be used within a MessagesProvider");
   }
   return context;

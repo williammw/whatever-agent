@@ -6,6 +6,7 @@ interface Message {
   text: string;
   role: string;
   avatar: string;
+  audioUrl?: string;
   loading?: boolean;
 }
 
@@ -20,29 +21,24 @@ interface MessagesContextType {
   addChat: (chat: Chat) => void;
   addMessageToChat: (chatId: string, message: Message) => void;
   updateMessage: (chatId: string, messageId: number, updates: Partial<Message>) => void;
-  updateChat: (chatId: string, updates: Partial<Chat>) => void;
-  deleteChat: (chatId: string) => void;
+  addAudioToChat: (chatId: string, audioUrl: string) => void;
 }
 
 const MessagesContext = createContext<MessagesContextType | undefined>(undefined);
 
 export const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [chats, setChats] = useState<Chat[]>([]);
-  
 
   const addChat = (chat: Chat) => {
     setChats((prevChats) => [...prevChats, chat]);
   };
+
   const updateChat = (chatId: string, updates: Partial<Chat>) => {
     setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === chatId ? { ...chat, ...updates } : chat
-      )
+      prevChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat))
     );
   };
-   const deleteChat = (chatId: string) => {
-    setChats((prevChats) => prevChats.filter((chat) => chat.id !== chatId));
-  };
+
   const addMessageToChat = (chatId: string, message: Message) => {
     setChats((prevChats) =>
       prevChats.map((chat) =>
@@ -66,9 +62,24 @@ export const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
   };
 
+  const addAudioToChat = (chatId: string, audioUrl: string) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId
+          ? {
+              ...chat,
+              messages: chat.messages.map((msg) =>
+                msg.role === "bot" && !msg.audioUrl ? { ...msg, audioUrl } : msg
+              ),
+            }
+          : chat
+      )
+    );
+  };
+
   return (
     <MessagesContext.Provider
-      value={{ chats, addChat, addMessageToChat, updateMessage, updateChat, deleteChat }}
+      value={{ chats, addChat, addMessageToChat, updateMessage, addAudioToChat }}
     >
       {children}
     </MessagesContext.Provider>

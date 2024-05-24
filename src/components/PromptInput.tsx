@@ -87,16 +87,34 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
         return;
       }
 
-      const { data } = event;
-      if (data.startsWith("[AUDIO]")) {
-        const audioBase64 = data.replace("[AUDIO]", "");
-        const audioUrl = `data:audio/mp3;base64,${audioBase64}`;
-        updateMessage(targetChatId, botMessageId, { text: botText, audioUrl, loading: false });
+      let rawData = event.data;
+      try {
+        console.log(rawData);
+        
+        if (rawData.startsWith("[AUDIO]")) {
+          const audioBase64 = rawData.replace("[AUDIO]", "");
+          const audioUrl = `data:audio/mp3;base64,${audioBase64}`;
+          updateMessage(targetChatId, botMessageId, { audioUrl, loading: false });
+          es.close();
+          setLoading(false);
+        } else {
+          const parsedData = JSON.parse(rawData);
+          const { content } = parsedData.message;
+
+          if (content) {
+            botText += content;
+            updateMessage(targetChatId, botMessageId, { text: botText });
+          }
+
+          if (parsedData.message.finish_reason === 'stop') {
+            es.close();
+            setLoading(false);
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing message:', error);
         es.close();
         setLoading(false);
-      } else if (data) {
-        botText += data;
-        updateMessage(targetChatId, botMessageId, { text: botText });
       }
     };
 

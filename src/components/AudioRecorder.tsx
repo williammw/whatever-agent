@@ -5,8 +5,11 @@ import { Button } from '@nextui-org/react';
 const AudioRecorder: React.FC = () => {
   const [recording, setRecording] = useState<boolean>(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [transcription, setTranscription] = useState<string>('');
+  const [audioUrl, setAudioUrl] = useState<string>('');
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const apiBaseUrl = import.meta.env.VITE_APP_APIURL;
+
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
@@ -45,7 +48,9 @@ const AudioRecorder: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Transcription:', response.data);
+      const { transcript, audioUrl } = response.data;
+      setTranscription(transcript);
+      setAudioUrl(audioUrl);
     } catch (error) {
       console.error('Error uploading audio:', error);
     }
@@ -59,6 +64,18 @@ const AudioRecorder: React.FC = () => {
       <Button onClick={sendAudioToBackend} disabled={!audioBlob} className="m-2">
         Send to Backend
       </Button>
+      {transcription && (
+        <div className="mt-4">
+          <h3>Transcription:</h3>
+          <p>{transcription}</p>
+        </div>
+      )}
+      {audioUrl && (
+        <div className="mt-4">
+          <h3>Audio:</h3>
+          <audio controls src={audioUrl}></audio>
+        </div>
+      )}
     </div>
   );
 };

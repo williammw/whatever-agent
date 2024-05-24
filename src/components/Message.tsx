@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faPauseCircle, faThumbsDown, faCopy } from "@fortawesome/free-regular-svg-icons";
 import { Skeleton } from "@nextui-org/react";
@@ -15,7 +15,7 @@ interface MessageProps {
 const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUrl, loading }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+  // console.log('audioUrl', audioUrl)
   const toggleAudioPlay = () => {
     if (audioUrl && audioRef.current) {
       if (!isPlaying) {
@@ -44,11 +44,11 @@ const Message: React.FC<MessageProps> = ({ text, role, username, avatar, audioUr
 
   const formattedText = text.split("\n").map((line, index) => (
     <React.Fragment key={index}>
-      {line}
+      {line.replace('```','<code>')}
       <br />
     </React.Fragment>
   ));
-
+  
   return (
     <div className="w-full text-token-text-primary">
       <div className="flex flex-col mx-auto gap-3 md:gap-4 md:px-5 lg:px-1 xl:px-5 md:max-w-3xl lg:max-w-[40rem] xl:max-w-[48rem] pb-0">

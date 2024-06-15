@@ -12,6 +12,8 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import PromptInput from "./components/PromptInput";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AudioRecorder from "./components/AudioRecorder";
+import UploadFile from "./components/UploadFile";
+import FileList from "./components/FileList";
 
 // Lazy load components
 const LoginPage = lazy(() => import("./components/LoginPage"));
@@ -45,6 +47,8 @@ const App: React.FC = () => {
                           <Route path="/" element={<ProtectedRoute component={ContentWithPromptInput} />} />
                           <Route path="/u/:chatId" element={<ProtectedRoute component={ContentWithPromptInput} />} />
                           <Route path="/profile" element={<ProtectedRoute component={ProfileForm} />} />
+                          <Route path="/uploadfile" element={<UploadFile />} />
+                          <Route path="/filelist" element={<FileList/>}  />
                         </Routes>
                       </Suspense>
                     </ErrorBoundary>

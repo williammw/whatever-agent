@@ -13,8 +13,10 @@ import PromptInput from "./components/PromptInput";
 
 // Lazy load components
 const LoginPage = lazy(() => import("./components/LoginPage"));
+const ApiLoginPage = lazy(() => import("./components/ApiLoginPage"));
 const RegisterPage = lazy(() => import("./components/RegisterPage"));
 const ProfileForm = lazy(() => import("./components/ProfileForm"));
+const Profile = lazy(() => import("./components/Profile"));
 const VerifyEmailPage = lazy(() => import("./components/VerifyEmailPage"));
 const Content = lazy(() => import("./components/Content"));
 const Sidebar = lazy(() => import("./components/Sidebar"));
@@ -62,6 +64,8 @@ const AppLayout: React.FC = () => {
           <ErrorBoundary>
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
+                <Route path="/login_v2" element={<ApiLoginPage />} />
+                <Route path="/profile_v2" element={<Profile/>} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/verify-email" element={<VerifyEmailPage />} />

@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@nextui-org/react";
 import { useSidebar } from '../context/SidebarContext';
-import { useAuth } from '../context/AuthContext'; // Import the custom hook
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
-  const { user, logout } = useAuth(); // Use the custom hook
-  const navigate = useNavigate(); // Use useNavigate for redirection
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
@@ -32,14 +32,14 @@ const Navbar: React.FC = () => {
         <Button    color="primary" variant="faded" className="mr-4">
           <FontAwesomeIcon icon={faShareNodes} className="text-gray-800" />
         </Button>
-        {user && (
+        {currentUser && (
           <div className="flex items-center">
             <img
-              src={user.photoURL ?? 'https://i.pravatar.cc/300'}
-              alt={user.displayName ?? 'User Avatar'}
+              src={currentUser.photoURL ?? 'https://i.pravatar.cc/300'}
+              alt={currentUser.displayName ?? 'User Avatar'}
               className="w-8 h-8 rounded-full mr-2"
             />
-            <span className="mr-4">{user.displayName ?? 'Username'}</span>
+            <span className="mr-4">{currentUser.displayName ?? 'Username'}</span>
             <Button    color="primary" variant="faded" onClick={handleLogout}>
               Logout
             </Button>

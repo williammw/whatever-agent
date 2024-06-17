@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useApiClient from '../hooks/useApiClient';
+
 const UploadFile = () => {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState('');
   const apiClient = useApiClient();
 
   const handleFileChange = (event) => {

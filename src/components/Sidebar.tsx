@@ -144,12 +144,12 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Overlay */}
-      {isSidebarOpen && window.innerWidth <= 768 && (
+      {/* {isSidebarOpen && window.innerWidth <= 768 && (
         <div
           className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"
           onClick={handleOverlayClick}
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -1,31 +1,27 @@
+// src/App.tsx
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, useParams} from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Content from "./components/Content";
+import { BrowserRouter as Router, Routes, Route, useParams, useLocation } from "react-router-dom";
 import { SidebarProvider } from './context/SidebarContext';
 import { MessagesProvider } from "./context/MessagesContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import LoadingSpinner from "./components/LoadingSpinner";
-import PromptInput from "./components/PromptInput";
 import ErrorBoundary from "./components/ErrorBoundary";
-import AudioRecorder from "./components/AudioRecorder";
-import UploadFile from "./components/UploadFile";
-import FileList from "./components/FileList";
+import PromptInput from "./components/PromptInput";
 
 // Lazy load components
 const LoginPage = lazy(() => import("./components/LoginPage"));
 const RegisterPage = lazy(() => import("./components/RegisterPage"));
 const ProfileForm = lazy(() => import("./components/ProfileForm"));
 const VerifyEmailPage = lazy(() => import("./components/VerifyEmailPage"));
+const Content = lazy(() => import("./components/Content"));
+const Sidebar = lazy(() => import("./components/Sidebar"));
 
-// Create a client
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
-  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -33,27 +29,7 @@ const App: React.FC = () => {
           <SidebarProvider>
             <Router>
               <div className="flex h-screen bg-white">
-                <Sidebar />
-                <div className="flex flex-1 flex-col overflow-hidden">
-                  <Navbar />
-                  <div className="flex-grow overflow-hidden">
-                    <ErrorBoundary>
-                      <Suspense fallback={<LoadingSpinner />}>
-                        <Routes>
-                          <Route path="/login" element={<LoginPage />} />
-                          <Route path="/register" element={<RegisterPage />} />
-                          <Route path="/asr" element={<AudioRecorder />} />
-                          <Route path="/verify-email" element={<VerifyEmailPage />} />
-                          <Route path="/" element={<ProtectedRoute component={ContentWithPromptInput} />} />
-                          <Route path="/u/:chatId" element={<ProtectedRoute component={ContentWithPromptInput} />} />
-                          <Route path="/profile" element={<ProtectedRoute component={ProfileForm} />} />
-                          <Route path="/uploadfile" element={<UploadFile />} />
-                          <Route path="/filelist" element={<FileList/>}  />
-                        </Routes>
-                      </Suspense>
-                    </ErrorBoundary>
-                  </div>
-                </div>
+                <AppLayout />
               </div>
             </Router>
           </SidebarProvider>
@@ -63,13 +39,49 @@ const App: React.FC = () => {
   );
 };
 
+const AppLayout: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  const hideNavbarRoutes = ["/login", "/register", "/verify-email"];
+
+  return (
+    <>
+      {isAuthenticated && (
+        <Suspense fallback={<LoadingSpinner />}>
+          <Sidebar />
+        </Suspense>
+      )}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {!hideNavbarRoutes.includes(location.pathname) && (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Navbar />
+          </Suspense>
+        )}
+        <div className="flex-grow overflow-hidden">
+          <ErrorBoundary>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/verify-email" element={<VerifyEmailPage />} />
+                <Route path="/" element={<ProtectedRoute component={ContentWithPromptInput} />} />
+                <Route path="/u/:chatId" element={<ProtectedRoute component={ContentWithPromptInput} />} />
+                <Route path="/profile" element={<ProtectedRoute component={ProfileForm} />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const ContentWithPromptInput: React.FC = () => {
   const { chatId } = useParams<{ chatId: string }>();
-  console.log('ContentWithPromptInput chatId:', chatId);
   return (
     <>
       <Content />
-      {/* <AudioRecorder/> */}
       <div className="sticky bottom-0 w-[80%] mx-auto pb-4 z-10">
         <PromptInput chatId={chatId} />
         <div className="relative px-2 py-2 text-center text-xs text-token-text-secondary md:px-[60px] bg-white"></div>

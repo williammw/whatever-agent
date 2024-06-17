@@ -22,6 +22,8 @@ interface MessagesContextType {
   addMessageToChat: (chatId: string, message: Message) => void;
   updateMessage: (chatId: string, messageId: number, updates: Partial<Message>) => void;
   addAudioToChat: (chatId: string, audioUrl: string) => void;
+  updateChat: (id: string, updatedChat: Partial<Chat>) => void;
+  deleteChat: (id: string) => void;
 }
 
 const MessagesContext = createContext<MessagesContextType | undefined>(undefined);
@@ -33,11 +35,18 @@ export const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setChats((prevChats) => [...prevChats, chat]);
   };
 
-  const updateChat = (chatId: string, updates: Partial<Chat>) => {
+  const updateChat = (id: string, updatedChat: Partial<Chat>) => {
     setChats((prevChats) =>
-      prevChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat))
+      prevChats.map((chat) =>
+        chat.id === id ? { ...chat, ...updatedChat } : chat
+      )
     );
   };
+
+  const deleteChat = (id: string) => {
+    setChats((prevChats) => prevChats.filter((chat) => chat.id !== id));
+  };
+
 
   const addMessageToChat = (chatId: string, message: Message) => {
     setChats((prevChats) =>
@@ -79,7 +88,7 @@ export const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   return (
     <MessagesContext.Provider
-      value={{ chats, addChat, addMessageToChat, updateMessage, addAudioToChat }}
+      value={{ chats, addChat, addMessageToChat, updateMessage, addAudioToChat, updateChat, deleteChat }}
     >
       {children}
     </MessagesContext.Provider>

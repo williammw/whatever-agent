@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+
+body {
+  margin: 0;
+  font-family: 'Proxima Nova', sans-serif;
+  background-color: #000000;
+  color: #000;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: bold;
+}
+
+p {
+  font-family: 'Proxima Nova', sans-serif;
+  line-height: 1.5;
+}
+
+button {
+  font-family: 'Proxima Nova', sans-serif;
+}
+
+img {
+  border-radius: 10px;
+}
 /* Custom styles for sticky footer input */
 .sticky-footer-input {
   margin-bottom: -1px; /* Fixes a 1px gap that can sometimes appear due to subpixel rendering */

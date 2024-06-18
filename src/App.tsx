@@ -64,8 +64,8 @@ const AppLayout: React.FC = () => {
           <ErrorBoundary>
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
-                <Route path="/login_v2" element={<ApiLoginPage />} />
-                <Route path="/profile_v2" element={<Profile/>} />
+                {/* <Route path="/login_v2" element={<ApiLoginPage />} />
+                <Route path="/profile_v2" element={<Profile/>} /> */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/verify-email" element={<VerifyEmailPage />} />

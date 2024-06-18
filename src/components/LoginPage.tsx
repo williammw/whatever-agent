@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import {Input} from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { EyeFilledIcon } from './EyeFilledIcon';
 import { EyeSlashFilledIcon } from './EyeSlashFilledIcon';
 
@@ -11,22 +11,33 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isVisible, setIsVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [error, setError] = useState('');
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await loginWithEmail(email, password);
+    try {
+      await loginWithEmail(email, password);
+      navigate('/profile');
+    } catch (error) {
+      setError('Invalid email or password');
+    }
   };
 
   const handleGoogleLogin = async () => {
-    await loginWithGoogle();
+    try {
+      await loginWithGoogle();
+      navigate('/profile');
+    } catch (error) {
+      setError('Google sign-in failed');
+    }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/profile');
     }
   }, [isAuthenticated, navigate]);
 
@@ -34,22 +45,15 @@ const LoginPage: React.FC = () => {
     <div className="flex min-h-screen">
       <div className="hidden md:flex md:w-1/2 bg-gray-800 items-center justify-center">
         <div className="text-white p-8">
-          <p className="mt-6 text-xl"></p>
+          <p className="mt-6 text-xl">Welcome back!</p>
         </div>
       </div>
       <div className="flex items-center justify-center w-full md:w-1/2 bg-gray-100">
         <form onSubmit={handleEmailLogin} className="p-8 w-full max-w-md">
           <h2 className="mb-4 text-2xl font-bold">Welcome back!</h2>
           <p className="mb-6 text-gray-600">Please enter your credentials to sign in!</p>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="mb-4">
-            {/* <label className="block mb-2 text-gray-700">User Name</label> */}
-            {/* <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
-              required
-            /> */}
             <Input
               label="Email"
               variant="bordered"
@@ -60,12 +64,9 @@ const LoginPage: React.FC = () => {
             />
           </div>
           <div className="mb-4 relative">
-            {/* <label className="block mb-2 text-gray-700">Password</label> */}
-            
             <Input
               label="Password"
               variant="bordered"
-              // placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               endContent={
@@ -80,17 +81,6 @@ const LoginPage: React.FC = () => {
               type={isVisible ? "text" : "password"}
               className="w-full p-0 focus:outline-none focus:ring-2 focus:ring-gray-800"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-500"
-            >
-              {/* {showPassword ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )} */}
-            </button>
           </div>
           <div className="flex items-center justify-between mb-4">
             <label className="flex items-center text-gray-700">

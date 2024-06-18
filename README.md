@@ -7,8 +7,8 @@ Umami is a web application built using a modern tech stack and various cloud ser
 - Backend API: FastAPI
 - Frontend App: Vite + React.js (TypeScript)
 - Database: AWS RDS
-- Application Engine: Docker on DigitalOcean
-- CDN: Cloudflare Images and R2
+- Application Engine: Docker on DigitalOcean 
+- CDN: Cloudflare Images and R2 
 - Streaming Data
 - Email Services: Firebase
 - OAuth: Firebase
@@ -23,6 +23,10 @@ Umami includes an agent that connects to the OpenAI API and utilizes its capabil
 [Demo Site (dev))](https://umamiai.netlify.app/)
 For more details about the API project, please refer to the [API repository](https://github.com/williammw/agdoc).
 ![Image 1](images/1.png)
-
 ![Image 2](images/2.png)
 
+
+### TODO List
+- streaming 
+- finetune
+- multimodel explore

@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperclip, faTurnUp, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faMicrophone, faStop } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useMessages } from "../context/MessagesContext";
 import { v4 as uuidv4 } from 'uuid';
-import { Textarea } from "@nextui-org/react";
+import { Textarea, Button } from "@nextui-org/react";
 import { fetchResponseStream } from "../services/apiService";
 
 interface PromptInputProps {
@@ -33,6 +33,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!input.trim()) return;
     setLoading(true);
     setIsStopped(false);
 
@@ -77,10 +78,6 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
     let botText = "";
 
-    es.onopen = () => {
-      console.log('EventSource connection opened');
-    };
-
     es.onmessage = (event) => {
       if (isStopped) {
         es.close();
@@ -89,8 +86,6 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
 
       let rawData = event.data;
       try {
-        console.log(rawData);
-        
         if (rawData.startsWith("[AUDIO]")) {
           const audioBase64 = rawData.replace("[AUDIO]", "");
           const audioUrl = `data:audio/mp3;base64,${audioBase64}`;
@@ -135,26 +130,49 @@ const PromptInput: React.FC<PromptInputProps> = ({ chatId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 rounded-lg">
-      <div className="flex items-center text-gray-900">
-        <FontAwesomeIcon icon={faPaperclip} className="mr-3 text-2xl" />
-        <div className="w-[80%]">
-          <Textarea
-            ref={textareaRef}
-            variant="faded"
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Enter a prompt here"
-            className="flex-grow rounded-md p-2 col-span-12 md:col-span-6 mb-6 md:mb-0 text-base leading-6"
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          <FontAwesomeIcon icon={faTurnUp} className="ml-3 text-2xl" />
-        </button>
-        {loading && (
-          <button type="button" onClick={handleStop} className="ml-2">
-            <FontAwesomeIcon icon={faStop} className="text-2xl" />
-          </button>
+    <form onSubmit={handleSubmit} className="relative bg-white rounded-lg shadow-lg p-4 mx-auto max-w-3xl">
+      <Textarea
+        ref={textareaRef}
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Type your message here..."
+        minRows={1}
+        maxRows={5}
+        className="w-full pr-24 resize-none"
+        disabled={loading}
+      />
+      <div className="absolute bottom-4 right-4 flex items-center space-x-2">
+        {loading ? (
+          <Button 
+            isIconOnly
+            color="danger" 
+            aria-label="Stop"
+            onClick={handleStop}
+            className="rounded-full"
+          >
+            <FontAwesomeIcon icon={faStop} />
+          </Button>
+        ) : (
+          <>
+            <Button 
+              isIconOnly
+              color="primary" 
+              aria-label="Send"
+              type="submit"
+              className="rounded-full"
+              disabled={!input.trim()}
+            >
+              <FontAwesomeIcon icon={faPaperPlane} />
+            </Button>
+            <Button 
+              isIconOnly
+              color="secondary" 
+              aria-label="Voice Input"
+              className="rounded-full"
+            >
+              <FontAwesomeIcon icon={faMicrophone} />
+            </Button>
+          </>
         )}
       </div>
     </form>

@@ -57,6 +57,13 @@ img {
 .message-text {
   white-space: pre-wrap; /* Maintains whitespace and wraps text */
 }
+.hide-scrollbar {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* WebKit */
+}
 
 /* Hide sidebar on mobile by default */
 @media (max-width: 768px) {

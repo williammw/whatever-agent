@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faPlus, faEdit, faCheck, faBars } from "@fortawesome/free-solid-svg-icons";
-import { Input } from "@nextui-org/react";
+import { faPlus, faBars, faEllipsisH, faPencilAlt, faShare, faTrash, faArchive, faFileExport } from "@fortawesome/free-solid-svg-icons";
+import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { useMessages } from "../context/MessagesContext";
 import { useAuth } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -72,85 +72,98 @@ const Sidebar: React.FC = () => {
     deleteChat(chatId);
   };
 
-  const handleOverlayClick = () => {
-    setIsSidebarOpen(false);
+  const handleShareChat = (chatId: string) => {
+    // Implement share functionality
+    console.log(`Sharing chat ${chatId}`);
+  };
+
+  const handleArchiveChat = (chatId: string) => {
+    // Implement archive functionality
+    console.log(`Archiving chat ${chatId}`);
+  };
+
+  const handleExportChat = (chatId: string) => {
+    // Implement export functionality
+    console.log(`Exporting chat ${chatId}`);
   };
 
   return (
-    <>
-      <div className={`flex flex-col h-full min-h-screen bg-gray-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-80" : "w-0"}`}>
-        <div className="flex justify-between items-center p-6">
-          <div className="flex">
-            <FontAwesomeIcon
-              icon={faBars}
-              onClick={toggleSidebar}
-              className="cursor-pointer text-xl"
-              title="Close"
-            />
-          </div>
-          <div className="flex items-center ml-auto">
-            <FontAwesomeIcon
-              icon={faPlus}
-              className="cursor-pointer text-xl"
-              onClick={handleCreateChat}
-              title="Create"
-            />
-          </div>
-        </div>
-
-        <div className="flex-grow overflow-y-auto p-4">
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Chat</h2>
-            {chats.map((chat) => (
-              <div key={chat.id} className="flex items-center justify-between mb-2">
-                {editingChatId === chat.id ? (
-                  <Input
-                    value={newTitle}
-                    onChange={handleTitleChange}
-                    onBlur={() => handleTitleBlur(chat.id)}
-                    onKeyUp={(e) => handleTitleKeyPress(e, chat.id)}
-                    autoFocus
-                  />
-                ) : (
-                  <Link
-                    to={`/u/${chat.id}`}
-                    className="block p-2 hover:bg-gray-700 rounded-md flex-grow"
-                  >
-                    {chat.name}
-                  </Link>
-                )}
-                {editingChatId === chat.id ? (
-                  <FontAwesomeIcon
-                    icon={faCheck}
-                    className="cursor-pointer ml-2 text-lg"
-                    onClick={() => handleTitleBlur(chat.id)}
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={faEdit}
-                    className="cursor-pointer ml-2 text-lg"
-                    onClick={() => handleEditClick(chat.id, chat.name)}
-                  />
-                )}
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="cursor-pointer ml-2 text-lg"
-                  onClick={() => handleDeleteChat(chat.id)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className={`flex flex-col h-full min-h-screen bg-gray-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-80" : "w-0"}`}>
+      <div className="flex justify-between items-center p-2">
+        <Button 
+          color="primary"
+          onClick={toggleSidebar}
+          variant="light"
+          isIconOnly
+          className="flex item-center transition-opacity duration-300"
+        >
+          <FontAwesomeIcon icon={faBars} className="text-gray-600" />
+        </Button>
+        <Button 
+          color="primary" 
+          onClick={handleCreateChat} 
+          isIconOnly 
+          variant="light"
+        >
+          <FontAwesomeIcon icon={faPlus} className="text-gray-600" />
+        </Button>
       </div>
 
-      {/* Overlay */}
-      {/* {isSidebarOpen && window.innerWidth <= 768 && (
-        <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"
-          onClick={handleOverlayClick}
-        />
-      )} */}
-    </>
+      <div className="flex-grow overflow-y-auto p-4 hide-scrollbar">
+        <div>
+          <h2 className="text-lg mb-4">Chat</h2>
+          {chats.map((chat) => (
+            <div key={chat.id} className="flex items-center justify-between mb-2 group">
+              {editingChatId === chat.id ? (
+                <Input
+                  value={newTitle}
+                  onChange={handleTitleChange}
+                  onBlur={() => handleTitleBlur(chat.id)}
+                  onKeyUp={(e) => handleTitleKeyPress(e, chat.id)}
+                  autoFocus
+                  className="flex-grow mr-2"
+                />
+              ) : (
+                <Link
+                  to={`/u/${chat.id}`}
+                  className="block p-2 hover:bg-gray-700 rounded-md flex-grow truncate"
+                >
+                  {chat.name}
+                </Link>
+              )}
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button 
+                    isIconOnly 
+                    variant="light" 
+                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <FontAwesomeIcon icon={faEllipsisH} className="text-white"/>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Chat Actions">
+                  <DropdownItem key="rename" startContent={<FontAwesomeIcon icon={faPencilAlt} />} onClick={() => handleEditClick(chat.id, chat.name)}>
+                    Rename
+                  </DropdownItem>
+                  <DropdownItem key="share" startContent={<FontAwesomeIcon icon={faShare} />} onClick={() => handleShareChat(chat.id)}>
+                    Share
+                  </DropdownItem>
+                  <DropdownItem key="delete" startContent={<FontAwesomeIcon icon={faTrash} />} onClick={() => handleDeleteChat(chat.id)}>
+                    Delete
+                  </DropdownItem>
+                  <DropdownItem key="archive" startContent={<FontAwesomeIcon icon={faArchive} />} onClick={() => handleArchiveChat(chat.id)}>
+                    Archive
+                  </DropdownItem>
+                  <DropdownItem key="export" startContent={<FontAwesomeIcon icon={faFileExport} />} onClick={() => handleExportChat(chat.id)}>
+                    Export
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

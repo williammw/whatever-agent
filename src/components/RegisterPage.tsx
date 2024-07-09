@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { sendEmailVerification } from "firebase/auth";
 import { Input, Button, Checkbox, Spacer, Select, SelectItem } from "@nextui-org/react";
-
+const apiBaseUrl = import.meta.env.VITE_APP_APIURL;
 const RegisterPage: React.FC = () => {
   const [birthMonth, setBirthMonth] = useState('');
   const [birthDay, setBirthDay] = useState('');
@@ -14,7 +14,8 @@ const RegisterPage: React.FC = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const { registerWithEmail, logout } = useAuth();
+  const { loginWithGoogle, loginWithEmail, isAuthenticated, registerWithEmail, logout } = useAuth();
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,6 +97,15 @@ const RegisterPage: React.FC = () => {
 
   const years = Array.from({ length: 100 }, (_, i) => ({ label: (2024 - i).toString(), value: (2024 - i).toString() }));
 
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      navigate('/profile');
+    } catch (error) {
+      setError('Google sign-in failed');
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
@@ -107,7 +117,7 @@ const RegisterPage: React.FC = () => {
               <Select
                 items={months}
                 label="Month"
-                selectedKey={birthMonth}
+                selectedKeys={birthMonth}
                 onSelectionChange={(key) => setBirthMonth(key as string)}
                 className="w-1/3"
               >
@@ -116,7 +126,7 @@ const RegisterPage: React.FC = () => {
               <Select
                 items={days}
                 label="Day"
-                selectedKey={birthDay}
+                selectedKeys={birthDay}
                 onSelectionChange={(key) => setBirthDay(key as string)}
                 className="w-1/3"
               >
@@ -125,7 +135,7 @@ const RegisterPage: React.FC = () => {
               <Select
                 items={years}
                 label="Year"
-                selectedKey={birthYear}
+                selectedKeys={birthYear}
                 onSelectionChange={(key) => setBirthYear(key as string)}
                 className="w-1/3"
               >
@@ -194,7 +204,7 @@ const RegisterPage: React.FC = () => {
         </p>
         <Button
           type="button"
-          onClick={() => window.location.href = "http://localhost:8000/api/v1/auth/login/google"}
+          onClick={handleGoogleLogin}
           className="w-full bg-red-500 text-white mt-4"
         >
           Login with Google
